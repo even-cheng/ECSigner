@@ -1,7 +1,7 @@
 # even-appSigner
 
 废话不多说，本工具基于老牌签名工具**[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)**，优化部分如下：
-![ sign.png](https://upload-images.jianshu.io/upload_images/2329149-635abb3c0bbbfa38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/%20sign.png)
 ```
 1，增加证书类型区分（企业证书，个人证书，通配符），除了非通配符个人证书以外开放bundle_id,可以自由编辑。
 ```
