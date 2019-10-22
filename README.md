@@ -1,4 +1,4 @@
-# even-appSigner
+# iOS-App-Signer-with-Even
 
 废话不多说，本工具基于老牌签名工具**[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)**，优化部分如下：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/%20sign.png)
