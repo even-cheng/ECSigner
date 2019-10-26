@@ -1,5 +1,0 @@
-#!/bin/bash
-DIR=`dirname $0`
-rm -Rf $DIR/build
-mkdir $DIR/build
-xcrun actool $DIR/Assets.xcassets --compile $DIR/build --platform iphoneos --minimum-deployment-target 8.0 --app-icon AppIcon --output-partial-info-plist $DIR/build/partial.plist
