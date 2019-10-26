@@ -21,6 +21,8 @@
 6，增加本地ICON一键替换原包内的ICON功能，无需手动解压IPA包内的Assets.car，只需要选择一张1024*1024大小的PNG图标即可同步打包完成替换。
 ``` 
 
+####如果Github下载太慢或者无法下载，我传了一份到码云：[签名文件](https://gitee.com/even_cheng/iOS-App-Signer-With-Even),[全网影视播放器](https://gitee.com/even_cheng/Miracle-Movie-Player)
+
 ####当然，如果你仅仅只是需要签名，那么选择你的包地址-选择你的开发者证书-选择描述文件-开始签名，就这么简单。[查看演示demo](https://www.jianshu.com/p/d66501d704c1)
 
 
