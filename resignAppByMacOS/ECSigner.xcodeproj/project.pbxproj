@@ -1,0 +1,408 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14D82D5F237E970E008D87AC /* MarkdownTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D41237E970E008D87AC /* MarkdownTokens.m */; };
+		14D82D60237E970E008D87AC /* MarkdownTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D45237E970E008D87AC /* MarkdownTokenizer.m */; };
+		14D82D61237E970E008D87AC /* NSAttributedStringMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D46237E970E008D87AC /* NSAttributedStringMarkdownParser.m */; };
+		14D82D62237E970E008D87AC /* fmemopen.c in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D4A237E970E008D87AC /* fmemopen.c */; };
+		14D82D63237E970E008D87AC /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D4D237E970E008D87AC /* Log.swift */; };
+		14D82D64237E970E008D87AC /* ProvisioningProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D4E237E970E008D87AC /* ProvisioningProfile.swift */; };
+		14D82D65237E970E008D87AC /* NSTask-execute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D4F237E970E008D87AC /* NSTask-execute.swift */; };
+		14D82D66237E970E008D87AC /* NSMenuLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D50237E970E008D87AC /* NSMenuLink.swift */; };
+		14D82D67237E970E008D87AC /* StringByAppendingPathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D51237E970E008D87AC /* StringByAppendingPathComponent.swift */; };
+		14D82D68237E970E008D87AC /* iASShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D52237E970E008D87AC /* iASShared.swift */; };
+		14D82D69237E970E008D87AC /* fix-wwdr.sh in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D54237E970E008D87AC /* fix-wwdr.sh */; };
+		14D82D6A237E970E008D87AC /* Assets.xcassets.zip in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D55237E970E008D87AC /* Assets.xcassets.zip */; };
+		14D82D6B237E970E008D87AC /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D56237E970E008D87AC /* Contents.json */; };
+		14D82D6C237E970E008D87AC /* acextract in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D57237E970E008D87AC /* acextract */; };
+		14D82D6D237E970E008D87AC /* acegeneral in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D58237E970E008D87AC /* acegeneral */; };
+		14D82D6E237E970E008D87AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D59237E970E008D87AC /* Assets.xcassets */; };
+		14D82D6F237E970E008D87AC /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D5A237E970E008D87AC /* Application.xib */; };
+		14D82D70237E970E008D87AC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D5B237E970E008D87AC /* AppDelegate.swift */; };
+		14D82D71237E970E008D87AC /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D82D5C237E970E008D87AC /* MainView.swift */; };
+		14D82D72237E970E008D87AC /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 14D82D5E237E970E008D87AC /* Info.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		14D82D41237E970E008D87AC /* MarkdownTokens.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkdownTokens.m; sourceTree = "<group>"; };
+		14D82D42237E970E008D87AC /* NSAttributedStringMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedStringMarkdownParser.h; sourceTree = "<group>"; };
+		14D82D43237E970E008D87AC /* NimbusMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimbusMarkdown.h; sourceTree = "<group>"; };
+		14D82D44237E970E008D87AC /* MarkdownTokens.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkdownTokens.h; sourceTree = "<group>"; };
+		14D82D45237E970E008D87AC /* MarkdownTokenizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkdownTokenizer.m; sourceTree = "<group>"; };
+		14D82D46237E970E008D87AC /* NSAttributedStringMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAttributedStringMarkdownParser.m; sourceTree = "<group>"; };
+		14D82D48237E970E008D87AC /* NimbusMemoryMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimbusMemoryMapping.h; sourceTree = "<group>"; };
+		14D82D49237E970E008D87AC /* fmemopen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fmemopen.h; sourceTree = "<group>"; };
+		14D82D4A237E970E008D87AC /* fmemopen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fmemopen.c; sourceTree = "<group>"; };
+		14D82D4B237E970E008D87AC /* AppSigner.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = AppSigner.entitlements; sourceTree = "<group>"; };
+		14D82D4D237E970E008D87AC /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		14D82D4E237E970E008D87AC /* ProvisioningProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningProfile.swift; sourceTree = "<group>"; };
+		14D82D4F237E970E008D87AC /* NSTask-execute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask-execute.swift"; sourceTree = "<group>"; };
+		14D82D50237E970E008D87AC /* NSMenuLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMenuLink.swift; sourceTree = "<group>"; };
+		14D82D51237E970E008D87AC /* StringByAppendingPathComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringByAppendingPathComponent.swift; sourceTree = "<group>"; };
+		14D82D52237E970E008D87AC /* iASShared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iASShared.swift; sourceTree = "<group>"; };
+		14D82D54237E970E008D87AC /* fix-wwdr.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "fix-wwdr.sh"; sourceTree = "<group>"; };
+		14D82D55237E970E008D87AC /* Assets.xcassets.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Assets.xcassets.zip; sourceTree = "<group>"; };
+		14D82D56237E970E008D87AC /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
+		14D82D57237E970E008D87AC /* acextract */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = acextract; sourceTree = "<group>"; };
+		14D82D58237E970E008D87AC /* acegeneral */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = acegeneral; sourceTree = "<group>"; };
+		14D82D59237E970E008D87AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		14D82D5A237E970E008D87AC /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
+		14D82D5B237E970E008D87AC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		14D82D5C237E970E008D87AC /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		14D82D5D237E970E008D87AC /* ECSigner-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ECSigner-Header.h"; sourceTree = "<group>"; };
+		14D82D5E237E970E008D87AC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		652408C81BE743D4006FA4C6 /* ECSigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ECSigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		652408C51BE743D4006FA4C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14D82D3E237E970E008D87AC /* ECSigner */ = {
+			isa = PBXGroup;
+			children = (
+				14D82D4B237E970E008D87AC /* AppSigner.entitlements */,
+				14D82D3F237E970E008D87AC /* NimbusKit */,
+				14D82D4C237E970E008D87AC /* Classes */,
+				14D82D53237E970E008D87AC /* Resources */,
+				14D82D59237E970E008D87AC /* Assets.xcassets */,
+				14D82D5A237E970E008D87AC /* Application.xib */,
+				14D82D5B237E970E008D87AC /* AppDelegate.swift */,
+				14D82D5C237E970E008D87AC /* MainView.swift */,
+				14D82D5D237E970E008D87AC /* ECSigner-Header.h */,
+				14D82D5E237E970E008D87AC /* Info.plist */,
+			);
+			path = ECSigner;
+			sourceTree = "<group>";
+		};
+		14D82D3F237E970E008D87AC /* NimbusKit */ = {
+			isa = PBXGroup;
+			children = (
+				14D82D40237E970E008D87AC /* markdown */,
+				14D82D47237E970E008D87AC /* memorymapping */,
+			);
+			path = NimbusKit;
+			sourceTree = "<group>";
+		};
+		14D82D40237E970E008D87AC /* markdown */ = {
+			isa = PBXGroup;
+			children = (
+				14D82D41237E970E008D87AC /* MarkdownTokens.m */,
+				14D82D42237E970E008D87AC /* NSAttributedStringMarkdownParser.h */,
+				14D82D43237E970E008D87AC /* NimbusMarkdown.h */,
+				14D82D44237E970E008D87AC /* MarkdownTokens.h */,
+				14D82D45237E970E008D87AC /* MarkdownTokenizer.m */,
+				14D82D46237E970E008D87AC /* NSAttributedStringMarkdownParser.m */,
+			);
+			path = markdown;
+			sourceTree = "<group>";
+		};
+		14D82D47237E970E008D87AC /* memorymapping */ = {
+			isa = PBXGroup;
+			children = (
+				14D82D48237E970E008D87AC /* NimbusMemoryMapping.h */,
+				14D82D49237E970E008D87AC /* fmemopen.h */,
+				14D82D4A237E970E008D87AC /* fmemopen.c */,
+			);
+			path = memorymapping;
+			sourceTree = "<group>";
+		};
+		14D82D4C237E970E008D87AC /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				14D82D4D237E970E008D87AC /* Log.swift */,
+				14D82D4E237E970E008D87AC /* ProvisioningProfile.swift */,
+				14D82D4F237E970E008D87AC /* NSTask-execute.swift */,
+				14D82D50237E970E008D87AC /* NSMenuLink.swift */,
+				14D82D51237E970E008D87AC /* StringByAppendingPathComponent.swift */,
+				14D82D52237E970E008D87AC /* iASShared.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		14D82D53237E970E008D87AC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				14D82D54237E970E008D87AC /* fix-wwdr.sh */,
+				14D82D55237E970E008D87AC /* Assets.xcassets.zip */,
+				14D82D56237E970E008D87AC /* Contents.json */,
+				14D82D57237E970E008D87AC /* acextract */,
+				14D82D58237E970E008D87AC /* acegeneral */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		652408BF1BE743D4006FA4C6 = {
+			isa = PBXGroup;
+			children = (
+				14D82D3E237E970E008D87AC /* ECSigner */,
+				652408C91BE743D4006FA4C6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		652408C91BE743D4006FA4C6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				652408C81BE743D4006FA4C6 /* ECSigner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		652408C71BE743D4006FA4C6 /* ECSigner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 652408ED1BE743D4006FA4C6 /* Build configuration list for PBXNativeTarget "ECSigner" */;
+			buildPhases = (
+				652408C41BE743D4006FA4C6 /* Sources */,
+				652408C51BE743D4006FA4C6 /* Frameworks */,
+				652408C61BE743D4006FA4C6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ECSigner;
+			productName = AppSigner;
+			productReference = 652408C81BE743D4006FA4C6 /* ECSigner.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		652408C01BE743D4006FA4C6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = "Daniel Radtke";
+				TargetAttributes = {
+					652408C71BE743D4006FA4C6 = {
+						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = 7PM929Z8M2;
+						LastSwiftMigration = 0810;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 652408C31BE743D4006FA4C6 /* Build configuration list for PBXProject "ECSigner" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+				Base,
+			);
+			mainGroup = 652408BF1BE743D4006FA4C6;
+			productRefGroup = 652408C91BE743D4006FA4C6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				652408C71BE743D4006FA4C6 /* ECSigner */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		652408C61BE743D4006FA4C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14D82D72237E970E008D87AC /* Info.plist in Resources */,
+				14D82D6C237E970E008D87AC /* acextract in Resources */,
+				14D82D69237E970E008D87AC /* fix-wwdr.sh in Resources */,
+				14D82D6D237E970E008D87AC /* acegeneral in Resources */,
+				14D82D6A237E970E008D87AC /* Assets.xcassets.zip in Resources */,
+				14D82D6E237E970E008D87AC /* Assets.xcassets in Resources */,
+				14D82D6B237E970E008D87AC /* Contents.json in Resources */,
+				14D82D6F237E970E008D87AC /* Application.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		652408C41BE743D4006FA4C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14D82D68237E970E008D87AC /* iASShared.swift in Sources */,
+				14D82D60237E970E008D87AC /* MarkdownTokenizer.m in Sources */,
+				14D82D70237E970E008D87AC /* AppDelegate.swift in Sources */,
+				14D82D67237E970E008D87AC /* StringByAppendingPathComponent.swift in Sources */,
+				14D82D63237E970E008D87AC /* Log.swift in Sources */,
+				14D82D66237E970E008D87AC /* NSMenuLink.swift in Sources */,
+				14D82D62237E970E008D87AC /* fmemopen.c in Sources */,
+				14D82D71237E970E008D87AC /* MainView.swift in Sources */,
+				14D82D61237E970E008D87AC /* NSAttributedStringMarkdownParser.m in Sources */,
+				14D82D65237E970E008D87AC /* NSTask-execute.swift in Sources */,
+				14D82D64237E970E008D87AC /* ProvisioningProfile.swift in Sources */,
+				14D82D5F237E970E008D87AC /* MarkdownTokens.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		652408EB1BE743D4006FA4C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		652408EC1BE743D4006FA4C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		652408EE1BE743D4006FA4C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/ECSigner/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.even-cheng.AppSigner";
+				PRODUCT_NAME = ECSigner;
+				SWIFT_OBJC_BRIDGING_HEADER = "ECSigner/ECSigner-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		652408EF1BE743D4006FA4C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/ECSigner/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.even-cheng.AppSigner";
+				PRODUCT_NAME = ECSigner;
+				SWIFT_OBJC_BRIDGING_HEADER = "ECSigner/ECSigner-Header.h";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		652408C31BE743D4006FA4C6 /* Build configuration list for PBXProject "ECSigner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				652408EB1BE743D4006FA4C6 /* Debug */,
+				652408EC1BE743D4006FA4C6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		652408ED1BE743D4006FA4C6 /* Build configuration list for PBXNativeTarget "ECSigner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				652408EE1BE743D4006FA4C6 /* Debug */,
+				652408EF1BE743D4006FA4C6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 652408C01BE743D4006FA4C6 /* Project object */;
+}
