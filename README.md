@@ -1,7 +1,10 @@
-# iOS-App-Signer-with-Even
+# ECSigner
 
 废话不多说，本工具基于老牌签名工具**[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)**，优化部分如下：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/%20sign.png)
+```
+11.25新增：多文件同步签名，无需等待。
+```
 ```
 1，增加证书类型区分（企业证书，个人证书，通配符），除了非通配符个人证书以外开放bundle_id,可以自由编辑。
 ```
@@ -20,9 +23,5 @@
 ```
 6，增加本地ICON一键替换原包内的ICON功能，无需手动解压IPA包内的Assets.car，只需要选择一张1024*1024大小的PNG图标即可同步打包完成替换。
 ``` 
-
-####如果Github下载太慢或者无法下载，我传了一份到码云：[签名文件](https://gitee.com/even_cheng/iOS-App-Signer-With-Even),[全网影视播放器](https://gitee.com/even_cheng/Miracle-Movie-Player)
-
-####当然，如果你仅仅只是需要签名，那么选择你的包地址-选择你的开发者证书-选择描述文件-开始签名，就这么简单。[查看演示demo](https://www.jianshu.com/p/d66501d704c1)
 
 
