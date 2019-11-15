@@ -1,7 +1,7 @@
 # ECSigner
 
 废话不多说，本工具基于老牌签名工具**[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)**，优化部分如下：
-![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/%20sign.png)
+![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign.png)
 ```
 11.15新增：多文件同步签名，无需等待。
 ```
