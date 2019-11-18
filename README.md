@@ -1,9 +1,10 @@
 # ECSigner
+**本项目完全开源，不偷证书！不偷证书！不偷证书！，不放心的自己看代码，里面有申请网络权限是因为本客户端支持填写包下载地址，直接内部下载完成自动签名，可以自行关闭网络权限。工具支持同时签名本地多包。**
 
-废话不多说，本工具基于老牌签名工具**[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)**，优化部分如下：
+***废话不多说，本工具基于老牌签名工具[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)***，优化部分如下：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign.png)
 ```
-11.15新增：多文件同步签名，无需等待。
+新增：多文件同步签名，无需等待。
 ```
 ```
 1，增加证书类型区分（企业证书，个人证书，通配符），除了非通配符个人证书以外开放bundle_id,可以自由编辑。
