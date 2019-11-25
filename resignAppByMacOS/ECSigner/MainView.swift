@@ -11,8 +11,8 @@ import PromiseKit
 
 class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDownloadDelegate {
     
-    private let configuration = APIConfiguration(issuerID: "779612b2-d36f-4d3c-807d-a34eb2e35cd6", privateKeyID: "W63BP69NBP", privateKey: "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg9hL7dnvkI6lf/wHTJ+wiv7oAykULapH2B45mqgRDQIegCgYIKoZIzj0DAQehRANCAATrNs55TCw2wiHVpsDzzpnPcD1Nuw3lXO+vjufeVFaEfLcliV3rMF9+rLp620S074USQwmNGuuISQNXYXjkSlox")
-    lazy var provider: APIProvider = APIProvider(configuration: configuration)
+    private var configuration: APIConfiguration?
+    private var provider: APIProvider?
 
     //MARK: IBOutlets
     @IBOutlet var openSignerViewButton: NSButton!
@@ -216,7 +216,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         if issuer != nil {
             issuerIDField.stringValue = issuer as! String
         } else {
-            let issue = "请输入ISSUER ID"
+            let issue = "ISSUER ID"
             let issueAttribute = NSMutableAttributedString.init(string: issue);
             issueAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: issue.count))
             issuerIDField.placeholderAttributedString = issueAttribute
@@ -228,7 +228,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         if key != nil {
             privateKeyField.stringValue = key as! String
         } else {
-            let privateKey = "请输入Private Key"
+            let privateKey = "Private Key"
             let privateKeyAttribute = NSMutableAttributedString.init(string: privateKey);
             privateKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKey.count))
             privateKeyField.placeholderAttributedString = privateKeyAttribute
@@ -240,7 +240,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         if keyId != nil {
             privateKeyIDField.stringValue = keyId as! String
         } else {
-            let privateKeyID = "请输入Private Key ID"
+            let privateKeyID = "Private Key ID"
             let privateKeyIDAttribute = NSMutableAttributedString.init(string: privateKeyID);
             privateKeyIDAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKeyID.count))
             privateKeyIDField.placeholderAttributedString = privateKeyIDAttribute
@@ -248,12 +248,12 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         
         UDIDsField.wantsLayer = true
         UDIDsField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
-        let udidKey = "请输入udid,并用英文逗号分隔(未填写则默认使用已注册的设备创建签名文件)"
+        let udidKey = "add new device UDIDs, separatedBy ','"
         let udidKeyAttribute = NSMutableAttributedString.init(string: udidKey);
         udidKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: udidKey.count))
         UDIDsField.placeholderAttributedString = udidKeyAttribute
         
-        let signerTipKey = "超级签名"
+        let signerTipKey = "Sign Online"
         let signerTipAttribute = NSMutableAttributedString.init(string: signerTipKey);
         signerTipAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.white], range: NSRange.init(location: 0, length: signerTipKey.count))
         signerModeTipField.placeholderAttributedString = signerTipAttribute
@@ -1276,7 +1276,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         let hiddenSignerView = sender.state == .off
         self.superSignDataView.isHidden = hiddenSignerView
         
-        let signerTipKey = hiddenSignerView ? "超级签名" : "超级签名(请前往 https://appstoreconnect.apple.com/access/api 生成密钥并填写在指定栏目)"
+        let signerTipKey = hiddenSignerView ? "Sign Online" : "Sign Online(go https://appstoreconnect.apple.com/access/api to creat private key)"
         let signerTipAttribute = NSMutableAttributedString.init(string: signerTipKey);
         signerTipAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.white], range: NSRange.init(location: 0, length: signerTipKey.count))
         signerModeTipField.placeholderAttributedString = signerTipAttribute
@@ -1965,6 +1965,10 @@ extension MainView {
                 resolver.fulfill(false)
                 return
             }
+            
+            configuration = APIConfiguration(issuerID: issuer, privateKeyID: privateKeyId, privateKey: privateKey)
+            provider = APIProvider(configuration: configuration!)
+
             UserDefaults.standard.set(issuer, forKey: "issuer")
             UserDefaults.standard.set(privateKey, forKey: "privateKey")
             UserDefaults.standard.set(privateKeyId, forKey: "privateKeyId")
@@ -2136,7 +2140,7 @@ extension MainView {
                 fields: [.devices([.addedDate, .udid, .deviceClass, .model, .name, .platform, .status])],
                 limit: 100,
                 sort: [.udidAscending])
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let devicesResponse):
                     let devices = devicesResponse.data as [Device]
@@ -2174,7 +2178,7 @@ extension MainView {
                 workingQueue.async {
                     
                     let endpoint = APIEndpoint.registerNewDevice(name: udid, udid: udid, platform: platform)
-                    self.provider.request(endpoint) {
+                    self.provider!.request(endpoint) {
                         switch $0 {
                         case .success(let deviceResponse):
                             let device = deviceResponse.data
@@ -2202,7 +2206,7 @@ extension MainView {
         let p = Promise<[BundleId]> { resolver in
             
             let endpoint = APIEndpoint.bundleIds(fields: [.bundleIds([.bundleIdCapabilities, .identifier, .name, .platform, .profiles, .seedId])], filter: [.identifier(["*"])])
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let bundleIdResponse):
                     let bundleIds = bundleIdResponse.data
@@ -2221,7 +2225,7 @@ extension MainView {
         let p = Promise<BundleId> { resolver in
             
             let endpoint = APIEndpoint.register(bundle_id: id, name: name, platform: .ios)
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let bundleIdResponse):
                     let bundleId: BundleId = bundleIdResponse.data
@@ -2241,7 +2245,7 @@ extension MainView {
         let p = Promise<[Certificate]> { resolver in
             
             let endpoint = APIEndpoint.listAndDownloadCertificates(filter: [.displayName([displatName])])
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let certificatesResponse):
                     let certificates = certificatesResponse.data
@@ -2279,7 +2283,7 @@ extension MainView {
             
             //name: "Created via API"
             let endpoint = APIEndpoint.creatCertificate(certificateType: .ios_development, csrContent: csrContent)
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let certificateResponse):
                     let  certificate = certificateResponse.data
@@ -2298,7 +2302,7 @@ extension MainView {
         let p = Promise<Certificate> { resolver in
             
             let endpoint = APIEndpoint.readAndDownloadCertificateInfomation(id: id, fields: [.certificates([.certificateContent, .certificateType, .csrContent, .displayName, .expirationDate, .name, .platform, .serialNumber])])
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let certificateResponse):
                     let  cer = certificateResponse.data
@@ -2365,7 +2369,7 @@ extension MainView {
         let p = Promise<[Profile]> { resolver in
             
             let endpoint = APIEndpoint.listAndDownloadProfiles(fields: [.profiles([.bundleId, .certificates, .createdDate, .devices, .expirationDate, .name, .platform, .profileContent, .profileState, .profileType, .uuid]), .certificates([.certificateContent, .certificateType, .csrContent, .displayName, .expirationDate, .name, .platform, .serialNumber])], filter: [.name([name])])
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let profilesResponse):
                     let profiles = profilesResponse.data
@@ -2384,7 +2388,7 @@ extension MainView {
         let p = Promise<Profile> { resolver in
             
             let endpoint = APIEndpoint.readAndDownloadProfilefomation(id: id, fields: [.profiles([.bundleId, .certificates, .createdDate, .devices, .expirationDate, .name, .platform, .profileContent, .profileState, .profileType, .uuid])])
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let profilesResponse):
                     let profiles = profilesResponse.data
@@ -2406,7 +2410,7 @@ extension MainView {
         let p = Promise<Profile> { resolver in
             
             let endpoint = APIEndpoint.creatProfile(name: name, profileType: ProfileType.ios_development.rawValue, bundle_id: bundleId, certificates: certificates, devices: devices)
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let profileResponse):
                     let profile = profileResponse.data
@@ -2425,7 +2429,7 @@ extension MainView {
         let p = Promise<Void> { resolver in
             
             let endpoint = APIEndpoint.deleteProfile(id: id)
-            provider.request(endpoint) {
+            provider!.request(endpoint) {
                 switch $0 {
                 case .success(let profileResponse):
                     resolver.fulfill(profileResponse)
