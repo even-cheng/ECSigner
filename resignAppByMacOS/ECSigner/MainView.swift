@@ -7,10 +7,21 @@
 //
 
 import Cocoa
+import PromiseKit
 
 class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDownloadDelegate {
     
+    private let configuration = APIConfiguration(issuerID: "779612b2-d36f-4d3c-807d-a34eb2e35cd6", privateKeyID: "W63BP69NBP", privateKey: "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg9hL7dnvkI6lf/wHTJ+wiv7oAykULapH2B45mqgRDQIegCgYIKoZIzj0DAQehRANCAATrNs55TCw2wiHVpsDzzpnPcD1Nuw3lXO+vjufeVFaEfLcliV3rMF9+rLp620S074USQwmNGuuISQNXYXjkSlox")
+    lazy var provider: APIProvider = APIProvider(configuration: configuration)
+
     //MARK: IBOutlets
+    @IBOutlet var openSignerViewButton: NSButton!
+    @IBOutlet var signerModeTipField: NSTextField!
+    @IBOutlet var superSignDataView: NSView!
+    @IBOutlet var issuerIDField: NSTextField!
+    @IBOutlet var privateKeyField: NSTextField!
+    @IBOutlet var privateKeyIDField: NSTextField!
+    @IBOutlet var UDIDsField: NSTextField!
     @IBOutlet var ProvisioningProfilesPopup: NSPopUpButton!
     @IBOutlet var CodesigningCertsPopup: NSPopUpButton!
     @IBOutlet var StatusLabel: NSTextField!
@@ -31,6 +42,8 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     //MARK: Variables
     var provisioningProfiles:[ProvisioningProfile] = []
     var codesigningCerts: [String] = []
+    //下载的证书路径
+    var signingCertificate: String?
     var profileFilename: String?
     var ReEnableNewApplicationID = false
     var PreviousNewApplicationID = ""
@@ -172,7 +185,9 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         
         self.wantsLayer = true
         self.layer!.backgroundColor = NSColor(red:0.28, green:0.28, blue:0.28, alpha:1.00).cgColor
-        
+        self.superSignDataView.wantsLayer = true
+        self.superSignDataView.layer!.backgroundColor = NSColor(red:0.28, green:0.28, blue:0.28, alpha:1.00).cgColor
+
         StartButton.wantsLayer = true
         StartButton.layer!.backgroundColor = NSColor(red:0.00, green:0.56, blue:0.95, alpha:1.00).cgColor
         StartButton.layer!.cornerRadius = 15
@@ -194,6 +209,54 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         InputFileText.layer!.cornerRadius = 10
         InputFileText.layer!.borderColor = NSColor(red:0.28, green:0.59, blue:1, alpha:0.35).cgColor
         InputFileText.layer!.borderWidth = 2
+        
+        issuerIDField.wantsLayer = true
+        issuerIDField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
+        let issuer = UserDefaults.standard.value(forKey: "issuer")
+        if issuer != nil {
+            issuerIDField.stringValue = issuer as! String
+        } else {
+            let issue = "请输入ISSUER ID"
+            let issueAttribute = NSMutableAttributedString.init(string: issue);
+            issueAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: issue.count))
+            issuerIDField.placeholderAttributedString = issueAttribute
+        }
+        
+        privateKeyField.wantsLayer = true
+        privateKeyField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
+        let key = UserDefaults.standard.value(forKey: "privateKey")
+        if key != nil {
+            privateKeyField.stringValue = key as! String
+        } else {
+            let privateKey = "请输入Private Key"
+            let privateKeyAttribute = NSMutableAttributedString.init(string: privateKey);
+            privateKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKey.count))
+            privateKeyField.placeholderAttributedString = privateKeyAttribute
+        }
+        
+        privateKeyIDField.wantsLayer = true
+        privateKeyIDField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
+        let keyId = UserDefaults.standard.value(forKey: "privateKeyId")
+        if keyId != nil {
+            privateKeyIDField.stringValue = keyId as! String
+        } else {
+            let privateKeyID = "请输入Private Key ID"
+            let privateKeyIDAttribute = NSMutableAttributedString.init(string: privateKeyID);
+            privateKeyIDAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKeyID.count))
+            privateKeyIDField.placeholderAttributedString = privateKeyIDAttribute
+        }
+        
+        UDIDsField.wantsLayer = true
+        UDIDsField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
+        let udidKey = "请输入udid,并用英文逗号分隔(未填写则默认使用已注册的设备创建签名文件)"
+        let udidKeyAttribute = NSMutableAttributedString.init(string: udidKey);
+        udidKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: udidKey.count))
+        UDIDsField.placeholderAttributedString = udidKeyAttribute
+        
+        let signerTipKey = "超级签名"
+        let signerTipAttribute = NSMutableAttributedString.init(string: signerTipKey);
+        signerTipAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.white], range: NSRange.init(location: 0, length: signerTipKey.count))
+        signerModeTipField.placeholderAttributedString = signerTipAttribute
         
         if NibLoaded == false {
             NibLoaded = true
@@ -409,6 +472,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 appDisplayName.isEnabled = true
                 outputAssetsButton.isEnabled = true
                 ReplaceIconChooseButton.isEnabled = true
+                openSignerViewButton.isEnabled = true
             } else {
                 // Backup previous values
                 PreviousNewApplicationID = NewApplicationIDTextField.stringValue
@@ -423,6 +487,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 appDisplayName.isEnabled = false
                 outputAssetsButton.isEnabled = false
                 ReplaceIconChooseButton.isEnabled = false
+                openSignerViewButton.isEnabled = false
             }
         }
     }
@@ -670,7 +735,6 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         //MARK: Set up variables
         var warnings = 0
         var inputFile : String = ""
-        var signingCertificate : String?
         var newApplicationID : String = ""
         var newDisplayName : String = ""
         var newShortVersion : String = ""
@@ -680,7 +744,9 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         DispatchQueue.main.sync {
             inputFile = input_path//self.InputFileText.stringValue
             newIconPath = self.ReplaceIconField.stringValue
-            signingCertificate = self.CodesigningCertsPopup.selectedItem?.title
+            if self.openSignerViewButton.state == .off {
+                signingCertificate = self.CodesigningCertsPopup.selectedItem?.title
+            }
             newApplicationID = self.NewApplicationIDTextField.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             newDisplayName = self.appDisplayName.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             newShortVersion = self.appShortVersion.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -734,7 +800,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         //MARK: Codesign Test
         
         DispatchQueue.main.async(execute: {
-            if let codesignResult = self.testSigning(signingCertificate!, tempFolder: tempFolder) {
+            if let codesignResult = self.testSigning(self.signingCertificate!, tempFolder: tempFolder) {
                 if codesignResult == false {
                     let alert = NSAlert()
                     alert.messageText = "Codesigning error"
@@ -744,7 +810,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                     let response = alert.runModal()
                     if response == NSApplication.ModalResponse.alertFirstButtonReturn {
                         iASShared.fixSigning(tempFolder)
-                        if self.testSigning(signingCertificate!, tempFolder: tempFolder) == false {
+                        if self.testSigning(self.signingCertificate!, tempFolder: tempFolder) == false {
                             let errorAlert = NSAlert()
                             errorAlert.messageText = "Unable to Fix"
                             errorAlert.addButton(withTitle: "OK")
@@ -1205,6 +1271,16 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         }
     }
 
+    @IBAction func openSignerViewAction(_ sender: NSButton) {
+        
+        let hiddenSignerView = sender.state == .off
+        self.superSignDataView.isHidden = hiddenSignerView
+        
+        let signerTipKey = hiddenSignerView ? "超级签名" : "超级签名(请前往 https://appstoreconnect.apple.com/access/api 生成密钥并填写在指定栏目)"
+        let signerTipAttribute = NSMutableAttributedString.init(string: signerTipKey);
+        signerTipAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.white], range: NSRange.init(location: 0, length: signerTipKey.count))
+        signerModeTipField.placeholderAttributedString = signerTipAttribute
+    }
     
     //MARK: IBActions
     @IBAction func chooseProvisioningProfile(_ sender: NSPopUpButton) {
@@ -1301,7 +1377,21 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             
             default:
                 NSApplication.shared.windows[0].makeFirstResponder(self)
-                startSigning()
+                
+                if self.openSignerViewButton.state == .on {
+                    
+                    self.prepareForSignWithUDID().done { (res: Bool) in
+                        if res == false {
+                            self.setStatus("签名失败")
+                        } else {
+                            self.setStatus("准备完成，开始签名")
+                            self.startSigning()
+                        }
+                    }
+                    
+                } else {
+                    startSigning()
+                }
         }
     }
     
@@ -1315,11 +1405,11 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     
     //导出素材
     @IBAction func extraOutAssets(_ sender: Any) {
-        
+
         if inputFiles.count != 1 {
             return;
         }
-        
+
         controlsEnabled(false)
 
         //MARK: Get output filename
@@ -1831,4 +1921,520 @@ extension Float {
  
     /// 小数点后如果只是0，显示整数，如果不是，显示原来的值
     var cleanZero : String {return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)}
+}
+
+
+extension MainView {
+    
+    private func chooseCsr() -> Promise<String> {
+        
+        let p = Promise<String> { resolver in
+        
+            let openDialog = NSOpenPanel()
+            openDialog.canChooseFiles = true
+            openDialog.canChooseDirectories = false
+            openDialog.allowsMultipleSelection = false
+            openDialog.allowsOtherFileTypes = false
+            openDialog.allowedFileTypes = ["certSigningRequest"]
+            openDialog.message = "请选择.certSigningRequest文件(仅首次使用需要，在钥匙串-证书助理申请）"
+            openDialog.title = "请选择"
+            openDialog.runModal()
+            if let filename = openDialog.urls.first {
+                resolver.fulfill(filename.path)
+            } else {
+                let error = NSError.init(domain: "选择CSR文件失败", code: 0, userInfo: nil)
+                resolver.reject(error)
+            }
+    
+        }
+        
+        return p
+    }
+    
+    private func prepareForSignWithUDID() -> Promise<Bool> {
+        
+        let p = Promise<Bool> { resolver in
+            
+            self.setStatus("开始注册")
+
+            let issuer = self.issuerIDField.stringValue
+            let privateKey = self.privateKeyField.stringValue
+            let privateKeyId = self.privateKeyIDField.stringValue
+            guard issuer.count > 0 && privateKey.count > 0 && privateKeyId.count > 0 else {
+                setStatus("请前往 https://appstoreconnect.apple.com/access/api 生成密钥并填写在指定栏目")
+                resolver.fulfill(false)
+                return
+            }
+            UserDefaults.standard.set(issuer, forKey: "issuer")
+            UserDefaults.standard.set(privateKey, forKey: "privateKey")
+            UserDefaults.standard.set(privateKeyId, forKey: "privateKeyId")
+            
+            var registerDevices: [Device] = []
+            var certificate: Certificate?
+            let profile_name = "ecsigner"
+            let cer_display_name = "Created via API"
+            var registerMoreDevices: Bool = false
+            
+            //创建临时文件夹保存下载的签名证书和描述文件
+            //MARK: Create working temp folder
+            let tempTask = Process().execute(mktempPath, workingDirectory: nil, arguments: ["-d","-t","ecsigner_files"])
+            if tempTask.status != 0 {
+                let def_error = NSError.init(domain: "下载证书失败", code: 0, userInfo: nil)
+                resolver.reject(def_error)
+                return
+            }
+            let tempPath = tempTask.output.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            
+            self.listAllCertificatesWithDisplayName(cer_display_name).then({ (certificates: [Certificate]) -> Promise<Certificate> in
+                
+                self.setStatus("获取证书列表")
+
+                for certificate in certificates {
+                    if certificate.attributes?.displayName == cer_display_name {
+                        let p = Promise<Certificate> { resolver in
+                            resolver.fulfill(certificate)
+                        }
+                        return p
+                    }
+                }
+                
+                return self.chooseCsr().then({ (CSRFilePath: String) -> Promise<Certificate> in
+                    
+                    self.setStatus("创建证书")
+                    return self.creatCertificate(CSRPath: CSRFilePath)
+                })
+            
+            }).then({ (cer: Certificate) -> Promise<Certificate> in
+                
+                self.setStatus("读取证书")
+                return self.readCertificateInfomation(id: cer.id)
+            
+            }).then({ (cer: Certificate) -> Promise<String> in
+                
+                self.setStatus("下载证书")
+                certificate = cer
+                self.signingCertificate = "iPhone Developer: \(certificate!.attributes!.displayName!) (\(self.privateKeyIDField.stringValue))"
+                let cerContent = cer.attributes?.certificateContent
+                return self.saveFileWithContent(cerContent, filePath: tempPath.stringByAppendingPathComponent("ecsigner.cer"))
+            
+            }).then({ (cer_path: String) -> Promise<[Device]> in
+                
+                self.setStatus("获取注册设备")
+                return self.listRegisterdDevices()
+            
+            }).then { (devices: [Device]) -> Promise<[Device]> in
+                
+                self.setStatus("注册新设备")
+                registerDevices.append(contentsOf: devices)
+
+                var udids = self.UDIDsField.stringValue.components(separatedBy: ",")
+                if udids.count == 1 && udids.first == "" {
+                    udids.removeAll()
+                }
+                for device in devices.sorted(by: { $0.attributes!.addedDate! > $1.attributes!.addedDate! }) {
+                    if udids.contains((device.attributes?.udid)!) {
+                        
+                        udids.removeAll(where: { (udid:String) -> Bool in
+                            return udid == device.attributes?.udid
+                        })
+                    }
+                }
+                
+                return self.registerdNewDevices(udids:udids, platform: .ios)
+                
+            }.then({ (devices: [Device]) -> Promise<[Profile]> in
+                
+                registerMoreDevices = devices.count > 0
+                self.setStatus("读取签名文件列表")
+                registerDevices.append(contentsOf: devices)
+                return self.listAllProfilesWithName(profile_name)
+                    
+            }).then({ (profiles: [Profile]) -> Promise<Profile> in
+                
+                self.setStatus("更新签名文件")
+                let certificates = [certificate!.id]
+                var device_ids: [String] = []
+                for register_device in registerDevices {
+                    device_ids.append(register_device.id)
+                }
+                
+                let bundleId = "*"
+                if profiles.count > 0 {
+                    
+                    //有新设备注册
+                    if  registerMoreDevices == true {
+                        
+                        return self.deleteProvisionFile(id: profiles.first!.id).then({ () -> Promise<Profile> in
+                            return self.creatProvisionFile(name: profile_name, bundleId: bundleId, certificates: certificates, devices: device_ids)
+                        })
+    
+                    } else {
+                        let p = Promise<Profile> { resolver in
+                            resolver.fulfill(profiles.first!)
+                        }
+                        return p
+                    }
+                }
+                
+                //如果不存在通配符证书则判断是否存在通配符BundleId
+                return self.listBundles().then({ (bundleIds: [BundleId]) -> Promise<BundleId> in
+                    
+                    //创建通配符证书ID
+                    if bundleIds.count == 0 {
+                        //创建通配符证书
+                        return self.creatBundleId(id: bundleId, name: profile_name)
+                    
+                    } else {
+                        let p = Promise<BundleId> { resolver in
+                            resolver.fulfill(bundleIds.first!)
+                        }
+                        return p
+                    }
+                    
+                }).then({ (bundleId: BundleId) -> Promise<Profile> in
+                    
+                    let certificates = [certificate!.id]
+                    var device_ids: [String] = []
+                    for register_device in registerDevices {
+                        device_ids.append(register_device.id)
+                    }
+                    return self.creatProvisionFile(name: profile_name, bundleId: bundleId.id, certificates: certificates, devices: device_ids)
+                })
+                
+            }).then({ (profile: Profile) -> Promise<Profile> in
+                
+                self.setStatus("下载签名文件")
+                return self.readProfileInfomation(id: profile.id)
+                
+            }).then({ (profile: Profile) -> Promise<String> in
+                
+                let cerContent = profile.attributes?.profileContent
+                return self.saveFileWithContent(cerContent, filePath: tempPath.stringByAppendingPathComponent("ecsigner.mobileprovision"))
+                    
+            }).done({ (profile_path: String) in
+                
+                self.profileFilename = profile_path
+                self.setStatus("更新签名文件成功")
+                resolver.fulfill(true)
+                    
+            }).catch { (error: Error) in
+                    
+                self.setStatus("下载签名证书失败，签名失败")
+                resolver.fulfill(false)
+            }
+        }
+        
+        
+        return p
+    }
+    
+    private func listRegisterdDevices() -> Promise<[Device]> {
+        
+        let p = Promise<[Device]> { resolver in
+            
+            let endpoint = APIEndpoint.listDevices(
+                fields: [.devices([.addedDate, .udid, .deviceClass, .model, .name, .platform, .status])],
+                limit: 100,
+                sort: [.udidAscending])
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let devicesResponse):
+                    let devices = devicesResponse.data as [Device]
+                    resolver.fulfill(devices)
+                    for device in devices.sorted(by: { $0.attributes!.addedDate! > $1.attributes!.addedDate! }) {
+                        print("device - \(device.attributes!.name!): \(device.attributes!.udid!)")
+                    }
+                case .failure(let error):
+                    resolver.reject(error)
+                    print("Something went wrong list the registerd devices: \(error)")
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func registerdNewDevices(udids: [String], platform: Platform) -> Promise<[Device]> {
+        
+        let p = Promise<[Device]> { resolver in
+        
+            if udids.count == 0 {
+                resolver.fulfill([])
+                return
+            }
+            
+            // 创建调度组
+            let workingGroup = DispatchGroup()
+            let workingQueue = DispatchQueue(label: "request_register_device")
+            var register_devices: [Device] = []
+            
+            for udid in udids {
+                
+                workingGroup.enter()
+                workingQueue.async {
+                    
+                    let endpoint = APIEndpoint.registerNewDevice(name: udid, udid: udid, platform: platform)
+                    self.provider.request(endpoint) {
+                        switch $0 {
+                        case .success(let deviceResponse):
+                            let device = deviceResponse.data
+                            register_devices.append(device)
+                        case .failure(_):
+                            print("udidRegisterError:\(udid)\n")
+                        }
+                    }
+                    // 出组
+                    workingGroup.leave()
+                }
+            }
+            
+            // 调度组里的任务都执行完毕
+            workingGroup.notify(queue: workingQueue) {
+                resolver.fulfill(register_devices)
+            }
+        }
+        
+        return p
+    }
+    
+    private func listBundles() -> Promise<[BundleId]> {
+        
+        let p = Promise<[BundleId]> { resolver in
+            
+            let endpoint = APIEndpoint.bundleIds(fields: [.bundleIds([.bundleIdCapabilities, .identifier, .name, .platform, .profiles, .seedId])], filter: [.identifier(["*"])])
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let bundleIdResponse):
+                    let bundleIds = bundleIdResponse.data
+                    resolver.fulfill(bundleIds)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func creatBundleId(id: String, name: String) -> Promise<BundleId> {
+    
+        let p = Promise<BundleId> { resolver in
+            
+            let endpoint = APIEndpoint.register(bundle_id: id, name: name, platform: .ios)
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let bundleIdResponse):
+                    let bundleId: BundleId = bundleIdResponse.data
+                    resolver.fulfill(bundleId)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    
+    private func listAllCertificatesWithDisplayName(_ displatName: String) -> Promise<[Certificate]> {
+        
+        let p = Promise<[Certificate]> { resolver in
+            
+            let endpoint = APIEndpoint.listAndDownloadCertificates(filter: [.displayName([displatName])])
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let certificatesResponse):
+                    let certificates = certificatesResponse.data
+                    resolver.fulfill(certificates)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func creatCertificate(CSRPath: String) -> Promise<Certificate> {
+        
+        let p = Promise<Certificate> { resolver in
+        
+            var CSR_Data: Data?
+            do {
+                CSR_Data = try Data.init(contentsOf: URL.init(fileURLWithPath: CSRPath))
+            } catch let error as NSError {
+                resolver.reject(error)
+            }
+            guard let CSRData = CSR_Data else {
+                let error = NSError.init(domain: "读取CSR文件失败", code: 0, userInfo: nil)
+                resolver.reject(error)
+                return
+            }
+            
+            guard let csrContent = String.init(data: CSRData, encoding: .utf8) else {
+                let error = NSError.init(domain: "创建certificate失败", code: 0, userInfo: nil)
+                resolver.reject(error)
+                return
+            }
+            
+            //name: "Created via API"
+            let endpoint = APIEndpoint.creatCertificate(certificateType: .ios_development, csrContent: csrContent)
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let certificateResponse):
+                    let  certificate = certificateResponse.data
+                    resolver.fulfill( certificate)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func readCertificateInfomation(id: String) -> Promise<Certificate> {
+        
+        let p = Promise<Certificate> { resolver in
+            
+            let endpoint = APIEndpoint.readAndDownloadCertificateInfomation(id: id, fields: [.certificates([.certificateContent, .certificateType, .csrContent, .displayName, .expirationDate, .name, .platform, .serialNumber])])
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let certificateResponse):
+                    let  cer = certificateResponse.data
+                    resolver.fulfill(cer)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    //echo content | base64 -D > fileName
+    private func saveFileWithContent(_ content: String?, filePath:String) -> Promise<String> {
+    
+        let p = Promise<String> { resolver in
+            
+            guard content != nil else {
+
+                let def_error = NSError.init(domain: "下载证书失败", code: 0, userInfo: nil)
+                resolver.reject(def_error)
+                return
+            }
+            guard let data = NSData.init(base64Encoded: content!, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters) else {
+                let def_error = NSError.init(domain: "下载证书失败", code: 0, userInfo: nil)
+                resolver.reject(def_error)
+                return
+            }
+            data.write(to: URL.init(fileURLWithPath: filePath), atomically: false)
+
+            //导入证书 security add-certificates
+            if filePath.hasSuffix(".cer") {
+              
+                let _ = Process().execute("/usr/bin/security", workingDirectory: nil, arguments: ["add-certificates",filePath])
+                self.setStatus("证书下载成功")
+                print("证书下载成功\(filePath)")
+                resolver.fulfill(filePath)
+                
+            } else {
+                
+                let fileManager = FileManager()
+                if let libraryDirectory = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first {
+                    let provisioningProfilesPath = libraryDirectory.path.stringByAppendingPathComponent("MobileDevice/Provisioning Profiles") as NSString
+                    let destinationPath = provisioningProfilesPath.appendingPathComponent(filePath.lastPathComponent)
+                    do {
+                        try fileManager.copyItem(atPath: filePath, toPath: destinationPath)
+                    } catch {
+                        
+                    }
+                }
+                
+                print("签名文件下载成功\(filePath)")
+                self.setStatus("签名文件下载成功")
+                resolver.fulfill(filePath)
+            }
+        }
+        
+        return p
+    }
+    
+    private func listAllProfilesWithName(_ name: String) -> Promise<[Profile]> {
+        
+        let p = Promise<[Profile]> { resolver in
+            
+            let endpoint = APIEndpoint.listAndDownloadProfiles(fields: [.profiles([.bundleId, .certificates, .createdDate, .devices, .expirationDate, .name, .platform, .profileContent, .profileState, .profileType, .uuid]), .certificates([.certificateContent, .certificateType, .csrContent, .displayName, .expirationDate, .name, .platform, .serialNumber])], filter: [.name([name])])
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let profilesResponse):
+                    let profiles = profilesResponse.data
+                    resolver.fulfill(profiles)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func readProfileInfomation(id: String) -> Promise<Profile> {
+        
+        let p = Promise<Profile> { resolver in
+            
+            let endpoint = APIEndpoint.readAndDownloadProfilefomation(id: id, fields: [.profiles([.bundleId, .certificates, .createdDate, .devices, .expirationDate, .name, .platform, .profileContent, .profileState, .profileType, .uuid])])
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let profilesResponse):
+                    let profiles = profilesResponse.data
+                    resolver.fulfill(profiles)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func creatProvisionFile(name : String,
+                                    bundleId : String,
+                                    certificates : [String],
+                                    devices : [String]) -> Promise<Profile> {
+        
+        let p = Promise<Profile> { resolver in
+            
+            let endpoint = APIEndpoint.creatProfile(name: name, profileType: ProfileType.ios_development.rawValue, bundle_id: bundleId, certificates: certificates, devices: devices)
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let profileResponse):
+                    let profile = profileResponse.data
+                    resolver.fulfill(profile)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
+    
+    private func deleteProvisionFile(id : String) -> Promise<Void> {
+        
+        let p = Promise<Void> { resolver in
+            
+            let endpoint = APIEndpoint.deleteProfile(id: id)
+            provider.request(endpoint) {
+                switch $0 {
+                case .success(let profileResponse):
+                    resolver.fulfill(profileResponse)
+                case .failure(let error):
+                    resolver.reject(error)
+                }
+            }
+        }
+        
+        return p
+    }
 }
