@@ -285,6 +285,11 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         }
     }
     
+    @IBAction func EnglishSwitchAction(_ sender: NSButton) {
+        
+    }
+    
+    
     func installXcodeCLI() -> AppSignerTaskOutput {
         return Process().execute("/usr/bin/xcode-select", workingDirectory: nil, arguments: ["--install"])
     }
