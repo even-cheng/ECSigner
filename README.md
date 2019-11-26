@@ -1,7 +1,5 @@
 # ECSigner
-**本项目完全开源，不偷证书！不偷证书！不偷证书！，不放心的自己看代码，里面有申请网络权限是因为本客户端支持填写包下载地址，直接内部下载完成自动签名，可以自行关闭网络权限。工具支持同时签名本地多包，支持在线注册设备下载签名证书完成签名，省去一切手动步骤！**
-
-***废话不多说，本工具基于老牌签名工具[ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)***，优化部分如下：
+***ECSigner is based on [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)，we have more functions：***
 ###新增超级签名支持，一键注册设备并创建下载签名证书，完成本地签名：
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/signOnline.png)
 ###常规签名流程：
