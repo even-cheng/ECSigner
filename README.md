@@ -27,8 +27,7 @@
 ```
 7，you can use your icon to explace the app's icon, and you won't lose any other assets image files(optional)。
 ``` 
-
-###How to use:
+### How to use:
 ```
 1.go https://appstoreconnect.apple.com/access/api to reply a secret key, you can get your ISSUERID、PrivateKey and PrivateKeyID.
 2.if you are first time register certificate，you need to get a CSR file from Keychain assistant（CertificateSigningRequest.certSigningRequest）
