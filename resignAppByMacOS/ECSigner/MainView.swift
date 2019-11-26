@@ -16,7 +16,6 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
 
     //MARK: IBOutlets
     @IBOutlet var openSignerViewButton: NSButton!
-    @IBOutlet var signerModeTipField: NSTextField!
     @IBOutlet var superSignDataView: NSView!
     @IBOutlet var issuerIDField: NSTextField!
     @IBOutlet var privateKeyField: NSTextField!
@@ -213,37 +212,34 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         issuerIDField.wantsLayer = true
         issuerIDField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
         let issuer = UserDefaults.standard.value(forKey: "issuer")
+        let issue = "Input the ISSUER ID"
+        let issueAttribute = NSMutableAttributedString.init(string: issue);
+        issueAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: issue.count))
+        issuerIDField.placeholderAttributedString = issueAttribute
         if issuer != nil {
             issuerIDField.stringValue = issuer as! String
-        } else {
-            let issue = "ISSUER ID"
-            let issueAttribute = NSMutableAttributedString.init(string: issue);
-            issueAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: issue.count))
-            issuerIDField.placeholderAttributedString = issueAttribute
         }
         
         privateKeyField.wantsLayer = true
         privateKeyField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
         let key = UserDefaults.standard.value(forKey: "privateKey")
+        let privateKey = "Input the Private Key"
+        let privateKeyAttribute = NSMutableAttributedString.init(string: privateKey);
+        privateKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKey.count))
+        privateKeyField.placeholderAttributedString = privateKeyAttribute
         if key != nil {
             privateKeyField.stringValue = key as! String
-        } else {
-            let privateKey = "Private Key"
-            let privateKeyAttribute = NSMutableAttributedString.init(string: privateKey);
-            privateKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKey.count))
-            privateKeyField.placeholderAttributedString = privateKeyAttribute
         }
         
         privateKeyIDField.wantsLayer = true
         privateKeyIDField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
+        let privateKeyID = "Input the Private Key ID"
+        let privateKeyIDAttribute = NSMutableAttributedString.init(string: privateKeyID);
+        privateKeyIDAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKeyID.count))
+        privateKeyIDField.placeholderAttributedString = privateKeyIDAttribute
         let keyId = UserDefaults.standard.value(forKey: "privateKeyId")
         if keyId != nil {
             privateKeyIDField.stringValue = keyId as! String
-        } else {
-            let privateKeyID = "Private Key ID"
-            let privateKeyIDAttribute = NSMutableAttributedString.init(string: privateKeyID);
-            privateKeyIDAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: privateKeyID.count))
-            privateKeyIDField.placeholderAttributedString = privateKeyIDAttribute
         }
         
         UDIDsField.wantsLayer = true
@@ -252,11 +248,6 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         let udidKeyAttribute = NSMutableAttributedString.init(string: udidKey);
         udidKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: udidKey.count))
         UDIDsField.placeholderAttributedString = udidKeyAttribute
-        
-        let signerTipKey = "Sign Online"
-        let signerTipAttribute = NSMutableAttributedString.init(string: signerTipKey);
-        signerTipAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.white], range: NSRange.init(location: 0, length: signerTipKey.count))
-        signerModeTipField.placeholderAttributedString = signerTipAttribute
         
         if NibLoaded == false {
             NibLoaded = true
@@ -284,11 +275,6 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             }
         }
     }
-    
-    @IBAction func EnglishSwitchAction(_ sender: NSButton) {
-        
-    }
-    
     
     func installXcodeCLI() -> AppSignerTaskOutput {
         return Process().execute("/usr/bin/xcode-select", workingDirectory: nil, arguments: ["--install"])
@@ -1280,12 +1266,18 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         
         let hiddenSignerView = sender.state == .off
         self.superSignDataView.isHidden = hiddenSignerView
-        
-        let signerTipKey = hiddenSignerView ? "Sign Online" : "Sign Online(go https://appstoreconnect.apple.com/access/api to creat private key)"
-        let signerTipAttribute = NSMutableAttributedString.init(string: signerTipKey);
-        signerTipAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.white], range: NSRange.init(location: 0, length: signerTipKey.count))
-        signerModeTipField.placeholderAttributedString = signerTipAttribute
     }
+    
+    @IBAction func helpWithAutoSign(_ sender: NSButton) {
+        
+        let alert = NSAlert.init()
+        alert.messageText = "About Auto Sign"
+        alert.informativeText = "If you check this, You need to fill in the parameters for the first time ,you can get these parameters from https://appstoreconnect.apple.com/access/api. And then, you can auto register new devices, also auto creat and update profiles and certificates, this tool can auto download new profile and certificate to resign apps or ipas, so try it now!"
+        alert.addButton(withTitle: "OK")
+        alert.alertStyle = .informational
+        alert.beginSheetModal(for: NSApp.keyWindow!, completionHandler: nil)
+    }
+    
     
     //MARK: IBActions
     @IBAction func chooseProvisioningProfile(_ sender: NSPopUpButton) {
@@ -1982,8 +1974,9 @@ extension MainView {
             var certificate: Certificate?
             let profile_name = "ecsigner"
             let cer_display_name = "Created via API"
-            var registerMoreDevices: Bool = false
-            
+            var updateCertificate: Bool = false
+            var updateProfile: Bool = false
+
             //创建临时文件夹保存下载的签名证书和描述文件
             //MARK: Create working temp folder
             let tempTask = Process().execute(mktempPath, workingDirectory: nil, arguments: ["-d","-t","ecsigner_files"])
@@ -1997,19 +1990,25 @@ extension MainView {
             self.listAllCertificatesWithDisplayName(cer_display_name).then({ (certificates: [Certificate]) -> Promise<Certificate> in
                 
                 self.setStatus("获取证书列表")
-
-                for certificate in certificates {
-                    if certificate.attributes?.displayName == cer_display_name {
-                        let p = Promise<Certificate> { resolver in
-                            resolver.fulfill(certificate)
+                let lastCerId = UserDefaults.standard.value(forKey: "CertificateID")
+                if lastCerId != nil {
+                    
+                    let cer_id: String = lastCerId as! String
+                    for certificate in certificates {
+                        if certificate.attributes?.displayName == cer_display_name && certificate.id == cer_id {
+                            
+                            let p = Promise<Certificate> { resolver in
+                                resolver.fulfill(certificate)
+                            }
+                            return p
                         }
-                        return p
                     }
                 }
                 
                 return self.chooseCsr().then({ (CSRFilePath: String) -> Promise<Certificate> in
                     
                     self.setStatus("创建证书")
+                    updateCertificate = true
                     return self.creatCertificate(CSRPath: CSRFilePath)
                 })
             
@@ -2023,6 +2022,7 @@ extension MainView {
                 self.setStatus("下载证书")
                 certificate = cer
                 self.signingCertificate = "iPhone Developer: \(certificate!.attributes!.displayName!) (\(self.privateKeyIDField.stringValue))"
+                UserDefaults.standard.setValue(cer.id, forKey: "CertificateID")
                 let cerContent = cer.attributes?.certificateContent
                 return self.saveFileWithContent(cerContent, filePath: tempPath.stringByAppendingPathComponent("ecsigner.cer"))
             
@@ -2053,7 +2053,7 @@ extension MainView {
                 
             }.then({ (devices: [Device]) -> Promise<[Profile]> in
                 
-                registerMoreDevices = devices.count > 0
+                updateProfile = devices.count > 0
                 self.setStatus("读取签名文件列表")
                 registerDevices.append(contentsOf: devices)
                 return self.listAllProfilesWithName(profile_name)
@@ -2069,9 +2069,10 @@ extension MainView {
                 
                 let bundleId = "*"
                 if profiles.count > 0 {
+                    let profile = profiles.first!
                     
-                    //有新设备注册
-                    if  registerMoreDevices == true {
+                    //更新描述证书
+                    if  updateCertificate == true || updateProfile == true {
                         
                         return self.deleteProvisionFile(id: profiles.first!.id).then({ () -> Promise<Profile> in
                             return self.creatProvisionFile(name: profile_name, bundleId: bundleId, certificates: certificates, devices: device_ids)
@@ -2079,7 +2080,7 @@ extension MainView {
     
                     } else {
                         let p = Promise<Profile> { resolver in
-                            resolver.fulfill(profiles.first!)
+                            resolver.fulfill(profile)
                         }
                         return p
                     }
@@ -2341,7 +2342,7 @@ extension MainView {
 
             //导入证书 security add-certificates
             if filePath.hasSuffix(".cer") {
-              
+
                 let _ = Process().execute("/usr/bin/security", workingDirectory: nil, arguments: ["add-certificates",filePath])
                 self.setStatus("证书下载成功")
                 print("证书下载成功\(filePath)")
