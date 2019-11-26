@@ -364,23 +364,14 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         if securityResult.output.characters.count < 1 {
             return output
         }
-        
-        //以下过滤规则未判断是否失效
-//        let rawResult = securityResult.output.components(separatedBy: "\"")
-//        var index: Int
-//        for index in stride(from: 0, through: rawResult.count - 2, by: 2) {
-//            if !(rawResult.count - 1 < index + 1) {
-//                output.append(rawResult[index+1])
-//            }
-//        }
-        
+
         //过滤已失效证书
         let rawResult = securityResult.output.components(separatedBy: "\n")
         for content in rawResult {
             let arr:[String?] = content.components(separatedBy: "\"")
             guard arr.count == 3, var cername = arr[arr.count-2] else {continue}
             if content.hasSuffix("(CSSMERR_TP_CERT_REVOKED)"){
-                cername.insert(contentsOf: "【已失效】", at: cername.startIndex)
+                cername.insert(contentsOf: "【REVOKED】", at: cername.startIndex)
             }
             output.append(cername)
         }
@@ -688,13 +679,13 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             //写入
             let wirteRes = rootDic.write(toFile: plistPath, atomically: true)
             if wirteRes {
-                print("写入plist文件成功")
+                print("creat .plist success")
             } else {
-                print("写入plist文件失败")
+                print("creat .plist failed")
             }
        
         } else {
-            print("创建plist文件失败")
+            print("creat .plist failed")
         }
     }
     
@@ -712,9 +703,9 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         // 写入
         do {
             try channe_name.write(toFile: txtPath, atomically: false, encoding: String.Encoding.utf8.rawValue)
-            print("string 文件写入成功")
+            print("channel string write success")
         } catch let error as NSError {
-            print("string 文件写入失败 %@",error)
+            print("channel string write failed: %@",error)
         }
     }
     
@@ -1265,6 +1256,8 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     @IBAction func openSignerViewAction(_ sender: NSButton) {
         
         let hiddenSignerView = sender.state == .off
+        self.CodesigningCertsPopup.isEnabled = hiddenSignerView
+        self.ProvisioningProfilesPopup.isEnabled = hiddenSignerView
         self.superSignDataView.isHidden = hiddenSignerView
     }
     
@@ -1329,7 +1322,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         openDialog.allowedFileTypes = ["ipa","IPA","deb","DEB","app","APP","xcarchive","XCARCHIVE"]
         openDialog.runModal()
         if let filename = openDialog.urls.first {
-            InputFileText.stringValue = "[\(openDialog.urls.count)个包]" + filename.path
+            InputFileText.stringValue = "[\(openDialog.urls.count)Packages]" + filename.path
             for url in openDialog.urls {
                 inputFiles.append(url.path)
             }
@@ -1379,9 +1372,9 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                     
                     self.prepareForSignWithUDID().done { (res: Bool) in
                         if res == false {
-                            self.setStatus("签名失败")
+                            self.setStatus("auto sign failed")
                         } else {
-                            self.setStatus("准备完成，开始签名")
+                            self.setStatus("update profile done，will begin to sign")
                             self.startSigning()
                         }
                     }
@@ -1426,7 +1419,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         //MARK: Set up variables
         var inputFile : String = ""
         DispatchQueue.main.sync {
-            inputFile = self.InputFileText.stringValue.components(separatedBy: "个包]").last!
+            inputFile = self.InputFileText.stringValue.components(separatedBy: "Packages]").last!
         }
         
         let inputStartsWithHTTP = inputFile.lowercased().substring(to: inputFile.characters.index(inputFile.startIndex, offsetBy: 4)) == "http"
@@ -1933,13 +1926,13 @@ extension MainView {
             openDialog.allowsMultipleSelection = false
             openDialog.allowsOtherFileTypes = false
             openDialog.allowedFileTypes = ["certSigningRequest"]
-            openDialog.message = "请选择.certSigningRequest文件(仅首次使用需要，在钥匙串-证书助理申请）"
-            openDialog.title = "请选择"
+            openDialog.message = "Choose .certSigningRequest(Only need once，form Keychain-assistant）"
+            openDialog.title = "Please Choose"
             openDialog.runModal()
             if let filename = openDialog.urls.first {
                 resolver.fulfill(filename.path)
             } else {
-                let error = NSError.init(domain: "选择CSR文件失败", code: 0, userInfo: nil)
+                let error = NSError.init(domain: "Choose .certSigningRequest failed", code: 0, userInfo: nil)
                 resolver.reject(error)
             }
     
@@ -1952,13 +1945,13 @@ extension MainView {
         
         let p = Promise<Bool> { resolver in
             
-            self.setStatus("开始注册")
+            self.setStatus("start update profile and certificate")
 
             let issuer = self.issuerIDField.stringValue
             let privateKey = self.privateKeyField.stringValue
             let privateKeyId = self.privateKeyIDField.stringValue
             guard issuer.count > 0 && privateKey.count > 0 && privateKeyId.count > 0 else {
-                setStatus("请前往 https://appstoreconnect.apple.com/access/api 生成密钥并填写在指定栏目")
+                setStatus("go https://appstoreconnect.apple.com/access/api to creat keys and input textfields")
                 resolver.fulfill(false)
                 return
             }
@@ -1981,7 +1974,7 @@ extension MainView {
             //MARK: Create working temp folder
             let tempTask = Process().execute(mktempPath, workingDirectory: nil, arguments: ["-d","-t","ecsigner_files"])
             if tempTask.status != 0 {
-                let def_error = NSError.init(domain: "下载证书失败", code: 0, userInfo: nil)
+                let def_error = NSError.init(domain: "failed build tmp folder to download certificate", code: 0, userInfo: nil)
                 resolver.reject(def_error)
                 return
             }
@@ -1989,7 +1982,7 @@ extension MainView {
             
             self.listAllCertificatesWithDisplayName(cer_display_name).then({ (certificates: [Certificate]) -> Promise<Certificate> in
                 
-                self.setStatus("获取证书列表")
+                self.setStatus("list certificates")
                 let lastCerId = UserDefaults.standard.value(forKey: "CertificateID")
                 if lastCerId != nil {
                     
@@ -2007,19 +2000,19 @@ extension MainView {
                 
                 return self.chooseCsr().then({ (CSRFilePath: String) -> Promise<Certificate> in
                     
-                    self.setStatus("创建证书")
+                    self.setStatus("creat certificate")
                     updateCertificate = true
                     return self.creatCertificate(CSRPath: CSRFilePath)
                 })
             
             }).then({ (cer: Certificate) -> Promise<Certificate> in
                 
-                self.setStatus("读取证书")
+                self.setStatus("creat certificate infomation")
                 return self.readCertificateInfomation(id: cer.id)
             
             }).then({ (cer: Certificate) -> Promise<String> in
                 
-                self.setStatus("下载证书")
+                self.setStatus("download certificate")
                 certificate = cer
                 self.signingCertificate = "iPhone Developer: \(certificate!.attributes!.displayName!) (\(self.privateKeyIDField.stringValue))"
                 UserDefaults.standard.setValue(cer.id, forKey: "CertificateID")
@@ -2028,12 +2021,12 @@ extension MainView {
             
             }).then({ (cer_path: String) -> Promise<[Device]> in
                 
-                self.setStatus("获取注册设备")
+                self.setStatus("list registerDevices")
                 return self.listRegisterdDevices()
             
             }).then { (devices: [Device]) -> Promise<[Device]> in
                 
-                self.setStatus("注册新设备")
+                self.setStatus("register new devices")
                 registerDevices.append(contentsOf: devices)
 
                 var udids = self.UDIDsField.stringValue.components(separatedBy: ",")
@@ -2054,13 +2047,13 @@ extension MainView {
             }.then({ (devices: [Device]) -> Promise<[Profile]> in
                 
                 updateProfile = devices.count > 0
-                self.setStatus("读取签名文件列表")
+                self.setStatus("read profile")
                 registerDevices.append(contentsOf: devices)
                 return self.listAllProfilesWithName(profile_name)
                     
             }).then({ (profiles: [Profile]) -> Promise<Profile> in
                 
-                self.setStatus("更新签名文件")
+                self.setStatus("update profile")
                 let certificates = [certificate!.id]
                 var device_ids: [String] = []
                 for register_device in registerDevices {
@@ -2113,7 +2106,7 @@ extension MainView {
                 
             }).then({ (profile: Profile) -> Promise<Profile> in
                 
-                self.setStatus("下载签名文件")
+                self.setStatus("download profile")
                 return self.readProfileInfomation(id: profile.id)
                 
             }).then({ (profile: Profile) -> Promise<String> in
@@ -2124,12 +2117,12 @@ extension MainView {
             }).done({ (profile_path: String) in
                 
                 self.profileFilename = profile_path
-                self.setStatus("更新签名文件成功")
+                self.setStatus("update profile success")
                 resolver.fulfill(true)
                     
             }).catch { (error: Error) in
                     
-                self.setStatus("下载签名证书失败，签名失败")
+                self.setStatus("update profile failed, failed auto sign.")
                 resolver.fulfill(false)
             }
         }
@@ -2276,13 +2269,13 @@ extension MainView {
                 resolver.reject(error)
             }
             guard let CSRData = CSR_Data else {
-                let error = NSError.init(domain: "读取CSR文件失败", code: 0, userInfo: nil)
+                let error = NSError.init(domain: "failed read data from CSR", code: 0, userInfo: nil)
                 resolver.reject(error)
                 return
             }
             
             guard let csrContent = String.init(data: CSRData, encoding: .utf8) else {
-                let error = NSError.init(domain: "创建certificate失败", code: 0, userInfo: nil)
+                let error = NSError.init(domain: "failed creat certificate", code: 0, userInfo: nil)
                 resolver.reject(error)
                 return
             }
@@ -2329,12 +2322,12 @@ extension MainView {
             
             guard content != nil else {
 
-                let def_error = NSError.init(domain: "下载证书失败", code: 0, userInfo: nil)
+                let def_error = NSError.init(domain: "failed download certificate", code: 0, userInfo: nil)
                 resolver.reject(def_error)
                 return
             }
             guard let data = NSData.init(base64Encoded: content!, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters) else {
-                let def_error = NSError.init(domain: "下载证书失败", code: 0, userInfo: nil)
+                let def_error = NSError.init(domain: "failed download certificate", code: 0, userInfo: nil)
                 resolver.reject(def_error)
                 return
             }
@@ -2344,8 +2337,7 @@ extension MainView {
             if filePath.hasSuffix(".cer") {
 
                 let _ = Process().execute("/usr/bin/security", workingDirectory: nil, arguments: ["add-certificates",filePath])
-                self.setStatus("证书下载成功")
-                print("证书下载成功\(filePath)")
+                self.setStatus("save certificate success")
                 resolver.fulfill(filePath)
                 
             } else {
@@ -2361,8 +2353,7 @@ extension MainView {
                     }
                 }
                 
-                print("签名文件下载成功\(filePath)")
-                self.setStatus("签名文件下载成功")
+                self.setStatus("save profile success")
                 resolver.fulfill(filePath)
             }
         }

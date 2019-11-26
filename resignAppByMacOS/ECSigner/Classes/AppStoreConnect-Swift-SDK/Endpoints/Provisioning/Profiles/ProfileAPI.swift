@@ -2,7 +2,7 @@
 //  ProfileAPI.swift
 //  ECSigner
 //
-//  Created by 快游 on 2019/11/21.
+//  Created by Even on 2019/11/21.
 //  Copyright © 2019 Even_cheng. All rights reserved.
 //
 
