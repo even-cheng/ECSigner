@@ -1,5 +1,5 @@
 # ECSigner
-***ECSigner is based on [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)，we have more functions：***
+***Thank for [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)and[App-Store-Connect](https://github.com/AvdLee/appstoreconnect-swift-sdk)，ECSigner have more functions：***
 ### Auto register devices, auto create(update) certificate and profile, auto download certificate and profile,also you can auto manage your developer account with App-Store-Connect-SDK in project：
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/autosign2.png)
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/aboutaotosign.png)
@@ -7,10 +7,10 @@
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/ecsign.png)
 
 ```
-1，you can resign multi-file synchronization```
+1，you can resign multi-file synchronization
 ```
 ```
-2，Auto Distinguish certificate types（In-house，personal，wildcard*）```
+2，Auto Distinguish certificate types（In-house，personal，wildcard*）
 ```
 ```
 3，you can add a remote link with .ipa，we will auto resign until download done（optional）。
