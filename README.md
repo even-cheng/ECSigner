@@ -28,4 +28,11 @@
 7，you can use your icon to explace the app's icon, and you won't lose any other assets image files(optional)。
 ``` 
 
+####How to use:
+```
+1.download the .zip file and unzip it
+2.drag the ECSigner.app into Applications
+3.open ECSigner.app, done!
+```
+
 
