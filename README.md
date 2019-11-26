@@ -1,7 +1,7 @@
 # ECSigner
 ***ECSigner is based on [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)，we have more functions：***
 ### Auto register devices, auto create(update) certificate and profile, auto download certificate and profile,also you can auto manage your developer account with App-Store-Connect-SDK in project：
-![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/aotosign2.png)
+![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/autosign2.png)
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/aboutaotosign.png)
 ### resign with local certificate and profile：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/ecsign.png)
@@ -28,7 +28,7 @@
 7，you can use your icon to explace the app's icon, and you won't lose any other assets image files(optional)。
 ``` 
 
-####How to use:
+###How to use:
 ```
 1.download the .zip file and unzip it
 2.drag the ECSigner.app into Applications
