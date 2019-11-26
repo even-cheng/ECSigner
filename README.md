@@ -30,9 +30,11 @@
 
 ###How to use:
 ```
-1.download the .zip file and unzip it
-2.drag the ECSigner.app into Applications
-3.open ECSigner.app, done!
+1.go https://appstoreconnect.apple.com/access/api to reply a secret key, you can get your ISSUERID、PrivateKey and PrivateKeyID.
+2.if you are first time register certificate，you need to get a CSR file from Keychain assistant（CertificateSigningRequest.certSigningRequest）
+3.download the .zip file and unzip it 
+4.drag the ECSigner.app into Applications
+5.open ECSigner.app, input params in fields, done!
 ```
 
 
