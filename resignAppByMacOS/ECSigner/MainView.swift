@@ -2030,9 +2030,9 @@ extension MainView {
                 registerDevices.append(contentsOf: devices)
 
                 var udids = self.UDIDsField.stringValue.components(separatedBy: ",")
-                if udids.count == 1 && udids.first == "" {
-                    udids.removeAll()
-                }
+                udids.removeAll(where: { (udid:String) -> Bool in
+                    return udid == ""
+                })
                 for device in devices.sorted(by: { $0.attributes!.addedDate! > $1.attributes!.addedDate! }) {
                     if udids.contains((device.attributes?.udid)!) {
                         
@@ -2067,7 +2067,7 @@ extension MainView {
                     //更新描述证书
                     if  updateCertificate == true || updateProfile == true {
                     
-                        return self.deleteProvisionFile(id: profiles.first!.id).then({ () -> Promise<Profile> in
+                        return self.deleteProvisionFile(id: profile.id).then({ () -> Promise<Profile> in
                             return self.creatProvisionFile(name: profile_name, bundleId: bundleId, certificates: certificates, devices: device_ids)
                         })
     
@@ -2176,7 +2176,7 @@ extension MainView {
                 workingGroup.enter()
                 workingQueue.async {
                     
-                    let endpoint = APIEndpoint.registerNewDevice(name: udid, udid: udid, platform: platform)
+                    let endpoint = APIEndpoint.registerNewDevice(name: udid, udid: udid, platform: platform.rawValue)
                     self.provider!.request(endpoint) {
                         switch $0 {
                         case .success(let deviceResponse):

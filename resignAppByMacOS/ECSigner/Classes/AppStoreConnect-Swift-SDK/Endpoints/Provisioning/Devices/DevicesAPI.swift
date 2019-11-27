@@ -16,7 +16,7 @@ extension APIEndpoint where T == DeviceResponse {
     public static func registerNewDevice(
         name: String,
         udid: String,
-        platform: Platform) -> APIEndpoint {
+        platform: String) -> APIEndpoint {
         
         let request = DeviceCreateRequest(
             name: name,

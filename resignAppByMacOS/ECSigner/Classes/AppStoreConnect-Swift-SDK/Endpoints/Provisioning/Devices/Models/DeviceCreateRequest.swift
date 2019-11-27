@@ -16,12 +16,13 @@ public struct DeviceCreateRequest: Codable {
     /// - Parameters:
     init(name: String,
          udid: String,
-         platform: Platform) {
+         platform: String) {
         
         data = .init(
             attributes: .init(
                 name: name,
-                platform: platform, udid: udid)
+                platform: platform,
+                udid: udid)
         )
     }
     
@@ -45,7 +46,7 @@ extension DeviceCreateRequest.Data {
         
         public let name: String?
 
-        public let platform: Platform?
+        public let platform: String?
         
         public let udid: String?
     }
