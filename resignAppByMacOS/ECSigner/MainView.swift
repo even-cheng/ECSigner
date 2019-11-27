@@ -2066,7 +2066,7 @@ extension MainView {
                     
                     //更新描述证书
                     if  updateCertificate == true || updateProfile == true {
-                        
+                    
                         return self.deleteProvisionFile(id: profiles.first!.id).then({ () -> Promise<Profile> in
                             return self.creatProvisionFile(name: profile_name, bundleId: bundleId, certificates: certificates, devices: device_ids)
                         })
@@ -2182,12 +2182,13 @@ extension MainView {
                         case .success(let deviceResponse):
                             let device = deviceResponse.data
                             register_devices.append(device)
-                        case .failure(_):
-                            print("udidRegisterError:\(udid)\n")
+                        case .failure(let error):
+                            self.setStatus("DeviceRegisterFailed:\(udid)\n")
+                            resolver.reject(error)
                         }
+                        // 出组
+                        workingGroup.leave()
                     }
-                    // 出组
-                    workingGroup.leave()
                 }
             }
             
