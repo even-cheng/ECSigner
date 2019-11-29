@@ -1,9 +1,9 @@
 //
 //  ViewController.swift
-//  AppSigner
+//  ECSigner
 //
-//  Created by Daniel Radtke on 11/2/15.
-//  Copyright © 2015 Daniel Radtke. All rights reserved.
+//  Created by Even on 2019/11/09.
+//  Copyright © 2019 Even_cheng. All rights reserved.
 //
 
 import Cocoa
