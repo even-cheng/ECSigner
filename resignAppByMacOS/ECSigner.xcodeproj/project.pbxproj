@@ -702,6 +702,7 @@
 		1496D4B9238542C500416727 /* ProfileBundleIdLinkageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileBundleIdLinkageResponse.swift; sourceTree = "<group>"; };
 		1496D4BB2385432600416727 /* ProfileCertificatesLinkagesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCertificatesLinkagesResponse.swift; sourceTree = "<group>"; };
 		1496D4BD2385436200416727 /* ProfileDevicesLinkagesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDevicesLinkagesResponse.swift; sourceTree = "<group>"; };
+		14B033BB238FDF6E0038083D /* ECSigner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ECSigner.entitlements; sourceTree = "<group>"; };
 		14D82D41237E970E008D87AC /* MarkdownTokens.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkdownTokens.m; sourceTree = "<group>"; };
 		14D82D42237E970E008D87AC /* NSAttributedStringMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedStringMarkdownParser.h; sourceTree = "<group>"; };
 		14D82D43237E970E008D87AC /* NimbusMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimbusMarkdown.h; sourceTree = "<group>"; };
@@ -711,7 +712,6 @@
 		14D82D48237E970E008D87AC /* NimbusMemoryMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimbusMemoryMapping.h; sourceTree = "<group>"; };
 		14D82D49237E970E008D87AC /* fmemopen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fmemopen.h; sourceTree = "<group>"; };
 		14D82D4A237E970E008D87AC /* fmemopen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fmemopen.c; sourceTree = "<group>"; };
-		14D82D4B237E970E008D87AC /* AppSigner.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = AppSigner.entitlements; sourceTree = "<group>"; };
 		14D82D4D237E970E008D87AC /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		14D82D4E237E970E008D87AC /* ProvisioningProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningProfile.swift; sourceTree = "<group>"; };
 		14D82D4F237E970E008D87AC /* NSTask-execute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask-execute.swift"; sourceTree = "<group>"; };
@@ -1316,7 +1316,7 @@
 		14D82D3E237E970E008D87AC /* ECSigner */ = {
 			isa = PBXGroup;
 			children = (
-				14D82D4B237E970E008D87AC /* AppSigner.entitlements */,
+				14B033BB238FDF6E0038083D /* ECSigner.entitlements */,
 				14D82D3F237E970E008D87AC /* NimbusKit */,
 				14D82D4C237E970E008D87AC /* Classes */,
 				14D82D53237E970E008D87AC /* Resources */,
@@ -1452,8 +1452,9 @@
 				TargetAttributes = {
 					652408C71BE743D4006FA4C6 = {
 						CreatedOnToolsVersion = 7.1;
-						DevelopmentTeam = 7PM929Z8M2;
+						DevelopmentTeam = 27242MV879;
 						LastSwiftMigration = 0810;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -1975,12 +1976,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 27242MV879;
 				INFOPLIST_FILE = "$(SRCROOT)/ECSigner/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.even-cheng.AppSigner";
 				PRODUCT_NAME = ECSigner;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ECSigner/ECSigner-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -1993,12 +1998,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 27242MV879;
 				INFOPLIST_FILE = "$(SRCROOT)/ECSigner/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.even-cheng.AppSigner";
 				PRODUCT_NAME = ECSigner;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ECSigner/ECSigner-Header.h";
 				SWIFT_VERSION = 4.0;
 			};

@@ -244,7 +244,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         
         UDIDsField.wantsLayer = true
         UDIDsField.layer!.backgroundColor = NSColor(red:1.00, green:1.00, blue:1.00, alpha:1.00).cgColor
-        let udidKey = "add new device UDIDs, separatedBy ','"
+        let udidKey = "add new device UDIDs, separatedBy '&'"
         let udidKeyAttribute = NSMutableAttributedString.init(string: udidKey);
         udidKeyAttribute.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.lightGray], range: NSRange.init(location: 0, length: udidKey.count))
         UDIDsField.placeholderAttributedString = udidKeyAttribute
@@ -1983,18 +1983,13 @@ extension MainView {
             self.listAllCertificatesWithDisplayName(cer_display_name).then({ (certificates: [Certificate]) -> Promise<Certificate> in
                 
                 self.setStatus("list certificates")
-                let lastCerId = UserDefaults.standard.value(forKey: "CertificateID")
-                if lastCerId != nil {
-                    
-                    let cer_id: String = lastCerId as! String
-                    for certificate in certificates {
-                        if certificate.attributes?.displayName == cer_display_name && certificate.id == cer_id {
-                            
-                            let p = Promise<Certificate> { resolver in
-                                resolver.fulfill(certificate)
-                            }
-                            return p
+                for certificate in certificates {
+                    if certificate.attributes?.displayName == cer_display_name {
+                        
+                        let p = Promise<Certificate> { resolver in
+                            resolver.fulfill(certificate)
                         }
+                        return p
                     }
                 }
                 
@@ -2005,17 +2000,11 @@ extension MainView {
                     return self.creatCertificate(CSRPath: CSRFilePath)
                 })
             
-            }).then({ (cer: Certificate) -> Promise<Certificate> in
-                
-                self.setStatus("creat certificate infomation")
-                return self.readCertificateInfomation(id: cer.id)
-            
             }).then({ (cer: Certificate) -> Promise<String> in
                 
                 self.setStatus("download certificate")
                 certificate = cer
                 self.signingCertificate = "iPhone Developer: \(certificate!.attributes!.displayName!) (\(self.privateKeyIDField.stringValue))"
-                UserDefaults.standard.setValue(cer.id, forKey: "CertificateID")
                 let cerContent = cer.attributes?.certificateContent
                 return self.saveFileWithContent(cerContent, filePath: tempPath.stringByAppendingPathComponent("ecsigner.cer"))
             
@@ -2029,7 +2018,7 @@ extension MainView {
                 self.setStatus("register new devices")
                 registerDevices.append(contentsOf: devices)
 
-                var udids = self.UDIDsField.stringValue.components(separatedBy: ",")
+                var udids = self.UDIDsField.stringValue.components(separatedBy: "&")
                 udids.removeAll(where: { (udid:String) -> Bool in
                     return udid == ""
                 })
@@ -2104,11 +2093,6 @@ extension MainView {
                     return self.creatProvisionFile(name: profile_name, bundleId: bundleId.id, certificates: certificates, devices: device_ids)
                 })
                 
-            }).then({ (profile: Profile) -> Promise<Profile> in
-                
-                self.setStatus("download profile")
-                return self.readProfileInfomation(id: profile.id)
-                
             }).then({ (profile: Profile) -> Promise<String> in
                 
                 let cerContent = profile.attributes?.profileContent
@@ -2159,6 +2143,7 @@ extension MainView {
     
     private func registerdNewDevices(udids: [String], platform: Platform) -> Promise<[Device]> {
         
+        print("register new devices: \(udids)")
         let p = Promise<[Device]> { resolver in
         
             if udids.count == 0 {
@@ -2296,26 +2281,7 @@ extension MainView {
         
         return p
     }
-    
-    private func readCertificateInfomation(id: String) -> Promise<Certificate> {
-        
-        let p = Promise<Certificate> { resolver in
-            
-            let endpoint = APIEndpoint.readAndDownloadCertificateInfomation(id: id, fields: [.certificates([.certificateContent, .certificateType, .csrContent, .displayName, .expirationDate, .name, .platform, .serialNumber])])
-            provider!.request(endpoint) {
-                switch $0 {
-                case .success(let certificateResponse):
-                    let  cer = certificateResponse.data
-                    resolver.fulfill(cer)
-                case .failure(let error):
-                    resolver.reject(error)
-                }
-            }
-        }
-        
-        return p
-    }
-    
+   
     //echo content | base64 -D > fileName
     private func saveFileWithContent(_ content: String?, filePath:String) -> Promise<String> {
     
@@ -2347,6 +2313,9 @@ extension MainView {
                 if let libraryDirectory = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first {
                     let provisioningProfilesPath = libraryDirectory.path.stringByAppendingPathComponent("MobileDevice/Provisioning Profiles") as NSString
                     let destinationPath = provisioningProfilesPath.appendingPathComponent(filePath.lastPathComponent)
+                    if fileManager.fileExists(atPath: destinationPath) {
+                        try? fileManager.removeItem(atPath: destinationPath)
+                    }
                     do {
                         try fileManager.copyItem(atPath: filePath, toPath: destinationPath)
                     } catch {
@@ -2380,26 +2349,7 @@ extension MainView {
         
         return p
     }
-    
-    private func readProfileInfomation(id: String) -> Promise<Profile> {
-        
-        let p = Promise<Profile> { resolver in
-            
-            let endpoint = APIEndpoint.readAndDownloadProfilefomation(id: id, fields: [.profiles([.bundleId, .certificates, .createdDate, .devices, .expirationDate, .name, .platform, .profileContent, .profileState, .profileType, .uuid])])
-            provider!.request(endpoint) {
-                switch $0 {
-                case .success(let profilesResponse):
-                    let profiles = profilesResponse.data
-                    resolver.fulfill(profiles)
-                case .failure(let error):
-                    resolver.reject(error)
-                }
-            }
-        }
-        
-        return p
-    }
-    
+  
     private func creatProvisionFile(name : String,
                                     bundleId : String,
                                     certificates : [String],
