@@ -2043,12 +2043,7 @@ extension MainView {
             }).then({ (profiles: [Profile]) -> Promise<Profile> in
                 
                 self.setStatus("update profile")
-                let certificates = [certificate!.id]
                 let bundleId = "*"
-                var device_ids: [String] = []
-                for register_device in registerDevices {
-                    device_ids.append(register_device.id)
-                }
                 
                 //如果不存在通配符证书则判断是否存在通配符BundleId
                 return self.listBundles().then({ (bundleIds: [BundleId]) -> Promise<BundleId> in
