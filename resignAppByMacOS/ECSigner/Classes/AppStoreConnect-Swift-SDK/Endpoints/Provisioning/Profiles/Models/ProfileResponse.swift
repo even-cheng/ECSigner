@@ -21,3 +21,9 @@ public struct ProfileResponse: Codable {
     /// Navigational links that include the self-link.
     public let links: PagedDocumentLinks
 }
+
+/// A response containing a list of resources.
+public struct VoidResponse: Codable {
+    
+    
+}

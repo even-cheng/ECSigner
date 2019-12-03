@@ -2044,28 +2044,10 @@ extension MainView {
                 
                 self.setStatus("update profile")
                 let certificates = [certificate!.id]
+                let bundleId = "*"
                 var device_ids: [String] = []
                 for register_device in registerDevices {
                     device_ids.append(register_device.id)
-                }
-                
-                let bundleId = "*"
-                if profiles.count > 0 {
-                    let profile = profiles.first!
-                    
-                    //更新描述证书
-                    if  updateCertificate == true || updateProfile == true {
-                    
-                        return self.deleteProvisionFile(id: profile.id).then({ () -> Promise<Profile> in
-                            return self.creatProvisionFile(name: profile_name, bundleId: bundleId, certificates: certificates, devices: device_ids)
-                        })
-    
-                    } else {
-                        let p = Promise<Profile> { resolver in
-                            resolver.fulfill(profile)
-                        }
-                        return p
-                    }
                 }
                 
                 //如果不存在通配符证书则判断是否存在通配符BundleId
@@ -2075,7 +2057,7 @@ extension MainView {
                     if bundleIds.count == 0 {
                         //创建通配符证书
                         return self.creatBundleId(id: bundleId, name: profile_name)
-                    
+                        
                     } else {
                         let p = Promise<BundleId> { resolver in
                             resolver.fulfill(bundleIds.first!)
@@ -2090,8 +2072,30 @@ extension MainView {
                     for register_device in registerDevices {
                         device_ids.append(register_device.id)
                     }
+                    
+                    if profiles.count > 0 {
+                        
+                        let profile = profiles.first!
+                        
+                        //更新描述证书
+                        if  updateCertificate == true || updateProfile == true {
+                        
+                            return self.deleteProvisionFile(id: profile.id).then({ (res) -> Promise<Profile> in
+                                
+                                return self.creatProvisionFile(name: profile_name, bundleId: bundleId.id, certificates: certificates, devices: device_ids)
+                            })
+                            
+                        } else {
+                            let p = Promise<Profile> { resolver in
+                                resolver.fulfill(profile)
+                            }
+                            return p
+                        }
+                    }
+                    
                     return self.creatProvisionFile(name: profile_name, bundleId: bundleId.id, certificates: certificates, devices: device_ids)
                 })
+                
                 
             }).then({ (profile: Profile) -> Promise<String> in
                 
@@ -2364,6 +2368,7 @@ extension MainView {
                     let profile = profileResponse.data
                     resolver.fulfill(profile)
                 case .failure(let error):
+                    self.setStatus("creat new provision failed")
                     resolver.reject(error)
                 }
             }
@@ -2372,15 +2377,15 @@ extension MainView {
         return p
     }
     
-    private func deleteProvisionFile(id : String) -> Promise<Void> {
+    private func deleteProvisionFile(id : String) -> Promise<Bool> {
         
-        let p = Promise<Void> { resolver in
+        let p = Promise<Bool> { resolver in
             
             let endpoint = APIEndpoint.deleteProfile(id: id)
             provider!.request(endpoint) {
                 switch $0 {
-                case .success(let profileResponse):
-                    resolver.fulfill(profileResponse)
+                case .success(_):
+                    resolver.fulfill(true)
                 case .failure(let error):
                     resolver.reject(error)
                 }
