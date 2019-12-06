@@ -45,10 +45,10 @@ extension APIEndpoint where T == Void {
     /// delete a Bundle Id
     ///
     /// - Parameters:
-    public static func delete(bundle_id: String) -> APIEndpoint {
+    public static func delete(id: String) -> APIEndpoint {
         
         return APIEndpoint(
-            path: "bundleIds/\(bundle_id)",
+            path: "bundleIds/\(id)",
             method: .delete,
             parameters: nil,
             body: nil)

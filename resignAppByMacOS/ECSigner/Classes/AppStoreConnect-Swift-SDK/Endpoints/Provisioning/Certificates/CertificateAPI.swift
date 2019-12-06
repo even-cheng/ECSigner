@@ -61,7 +61,7 @@ extension APIEndpoint where T == Void {
     public static func revokeCertificate(id: String) -> APIEndpoint {
         
         return APIEndpoint(
-            path: "creatCertificate/\(id)",
+            path: "certificates/\(id)",
             method: .delete,
             parameters: nil,
             body: nil)
