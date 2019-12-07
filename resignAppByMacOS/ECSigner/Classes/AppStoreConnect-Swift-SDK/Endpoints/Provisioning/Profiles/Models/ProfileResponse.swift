@@ -21,4 +21,3 @@ public struct ProfileResponse: Codable {
     /// Navigational links that include the self-link.
     public let links: PagedDocumentLinks
 }
-

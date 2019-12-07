@@ -52,8 +52,8 @@ extension APIEndpoint where T == DeviceResponse {
             status: status)
         
         return APIEndpoint(
-            path: "devices",
-            method: .post,
+            path: "devices/\(id)",
+            method: .patch,
             parameters: nil,
             body: try? JSONEncoder().encode(request))
     }

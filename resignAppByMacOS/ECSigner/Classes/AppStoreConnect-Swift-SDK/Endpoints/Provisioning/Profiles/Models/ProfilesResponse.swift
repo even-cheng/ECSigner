@@ -15,7 +15,7 @@ public struct ProfilesResponse: Codable {
     public let data: [Profile]
     
     /// The requested relationship data.
-    public let include: [Certificate]?
+    public let include: [Device]?
     
     /// The requested relationship data.
     public let meta: PagingInformation?

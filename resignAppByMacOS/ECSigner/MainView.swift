@@ -1935,7 +1935,6 @@ extension MainView {
                 let error = NSError.init(domain: "Choose .certSigningRequest failed", code: 0, userInfo: nil)
                 resolver.reject(error)
             }
-    
         }
         
         return p
