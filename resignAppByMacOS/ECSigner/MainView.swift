@@ -120,7 +120,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     }
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        let pasteboard = sender.draggingPasteboard()
+        let pasteboard = sender.draggingPasteboard
         if let board = pasteboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray {
             if let filePath = board[0] as? String {
                 
@@ -143,14 +143,14 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     }
     
     func checkExtension(_ drag: NSDraggingInfo) -> Bool {
-        if let board = drag.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray,
+        if let board = drag.draggingPasteboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray,
             let path = board[0] as? String {
                 return self.fileTypes.contains(path.pathExtension.lowercased())
         }
-        if let types = drag.draggingPasteboard().types {
+        if let types = drag.draggingPasteboard.types {
             if #available(OSX 10.13, *) {
                 if types.contains(NSPasteboard.PasteboardType.URL) {
-                    if let url = NSURL(from: drag.draggingPasteboard()),
+                    if let url = NSURL(from: drag.draggingPasteboard),
                         let suffix = url.pathExtension {
                         return self.urlFileTypes.contains(suffix.lowercased())
                     }
@@ -361,7 +361,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     func getCodesigningCerts() -> [String] {
         var output: [String] = []
         let securityResult = Process().execute(securityPath, workingDirectory: nil, arguments: ["find-identity","-v","-p","codesigning"])
-        if securityResult.output.characters.count < 1 {
+        if securityResult.output.count < 1 {
             return output
         }
 
@@ -525,7 +525,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     func getPlistKey(_ plist: String, keyName: String)->String? {
         let currTask = Process().execute(defaultsPath, workingDirectory: nil, arguments: ["read", plist, keyName])
         if currTask.status == 0 {
-            return String(currTask.output.characters.dropLast())
+            return String(currTask.output.dropLast())
         } else {
             return nil
         }
@@ -736,7 +736,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         }
 
         var provisioningFile = self.profileFilename
-        let inputStartsWithHTTP = inputFile.lowercased().substring(to: inputFile.characters.index(inputFile.startIndex, offsetBy: 4)) == "http"
+        let inputStartsWithHTTP = inputFile.lowercased().substring(to: inputFile.index(inputFile.startIndex, offsetBy: 4)) == "http"
         var eggCount: Int = 0
         var continueSigning: Bool? = nil
         
@@ -1422,7 +1422,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             inputFile = self.InputFileText.stringValue.components(separatedBy: "Packages]").last!
         }
         
-        let inputStartsWithHTTP = inputFile.lowercased().substring(to: inputFile.characters.index(inputFile.startIndex, offsetBy: 4)) == "http"
+        let inputStartsWithHTTP = inputFile.lowercased().substring(to: inputFile.index(inputFile.startIndex, offsetBy: 4)) == "http"
         
         // Check if input file exists
         var inputIsDirectory: ObjCBool = false
@@ -1753,7 +1753,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         let originAssetsFile = bundlePath.stringByAppendingPathComponent("Assets.car")
         let acetractAssetsTask = Process().execute(acextractPath, workingDirectory: nil, arguments: ["-i",originAssetsFile,"-o",originAssetsUnzipPath])
         if acetractAssetsTask.status != 0 {
-            setStatus("Error run general cmd")
+            setStatus("Error run acextractPath")
             cleanup(originAssetsUnzipPath);
         }
         
@@ -1841,7 +1841,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         //执行命令生成build文件夹
         let generalAssetsTask = Process().execute(acegeneralFile, workingDirectory: nil, arguments: nil)
         if generalAssetsTask.status != 0 {
-            setStatus("Error run general cmd")
+            setStatus("Error run acegeneralFile")
             cleanup(tempAssets);
             cleanup(tempAssets); return
         }
@@ -1866,16 +1866,20 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     }
     
     func saveImg(_ image: NSImage, toPath:String?, size:CGSize) -> Bool {
-        
-        image.lockFocus()
-        let bits = NSBitmapImageRep.init(focusedViewRect: NSRect.init(x: 0, y: 0, width: size.width, height: size.height))
-        image.unlockFocus()
+                  
+        let rep = NSBitmapImageRep.init(bitmapDataPlanes: nil, pixelsWide: Int(size.width), pixelsHigh: Int(size.height), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: NSColorSpaceName.calibratedRGB, bitmapFormat: NSBitmapImageRep.Format.alphaFirst, bytesPerRow: 0, bitsPerPixel: 0)
+        rep?.size = size
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext.init(bitmapImageRep: rep!)
+        image.draw(in: NSMakeRect(0, 0, size.width, size.height))
+        NSGraphicsContext.restoreGraphicsState()
+       
         let imageProps: NSDictionary = NSDictionary.init(dictionary: [NSBitmapImageRep.PropertyKey.compressionFactor:false])
-        let imageData = bits!.representation(using: NSBitmapImageRep.FileType.png, properties: imageProps as! [NSBitmapImageRep.PropertyKey : Any])
+        let imageData = rep!.representation(using: NSBitmapImageRep.FileType.png, properties: imageProps as! [NSBitmapImageRep.PropertyKey : Any])
         if (try? imageData!.write(to: URL.init(fileURLWithPath: toPath!), options: Data.WritingOptions.atomic)) != nil {
             return true
         }
-        
+
         return false
     }
 }

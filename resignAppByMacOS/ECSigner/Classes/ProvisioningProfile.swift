@@ -59,23 +59,26 @@ struct ProvisioningProfile {
             }
             
             if let results = try? PropertyListSerialization.propertyList(from: self.rawXML.data(using: String.Encoding.utf8)!, options: PropertyListSerialization.MutabilityOptions(), format: nil) {
+                
                 if let expirationDate = (results as AnyObject).value(forKey: "ExpirationDate") as? Date,
-                    let creationDate = (results as AnyObject).value(forKey: "CreationDate") as? Date,
-                    let name = (results as AnyObject).value(forKey: "Name") as? String,
-                    let team_name = (results as AnyObject).value(forKey: "TeamName") as? String,
-                    let provisionAllDevices = try?(results as AnyObject).value(forKey: "ProvisionsAllDevices") as? Bool,
-                    let entitlements = (results as AnyObject).value(forKey: "Entitlements"),
-                    let applicationIdentifier = (entitlements as AnyObject).value(forKey: "application-identifier") as? String,
-                    let periodIndex = applicationIdentifier.characters.index(of: ".") {
-                        self.filename = filename
-                        self.expires = expirationDate
-                        self.created = creationDate
-                        self.appID = applicationIdentifier.substring(from: applicationIdentifier.index(periodIndex, offsetBy: 1))
-                        self.teamID = applicationIdentifier.substring(to: periodIndex)
-                        self.teamName = team_name
-                        self.name = name
-                        self.entitlements = entitlements as AnyObject?
-                        self.isWildcard = appID.characters.index(of: "*") != nil
+                let creationDate = (results as AnyObject).value(forKey: "CreationDate") as? Date,
+                let name = (results as AnyObject).value(forKey: "Name") as? String,
+                let team_name = (results as AnyObject).value(forKey: "TeamName") as? String,
+                let entitlements = (results as AnyObject).value(forKey: "Entitlements"),
+                let applicationIdentifier = (entitlements as AnyObject).value(forKey: "application-identifier") as? String,
+                let periodIndex = applicationIdentifier.firstIndex(of: ".") {
+                    
+                    let provisionAllDevices = try?(results as AnyObject).value(forKey: "ProvisionsAllDevices") as? Bool
+                    self.filename = filename
+                    self.expires = expirationDate
+                    self.created = creationDate
+                    self.appID = applicationIdentifier.substring(from: applicationIdentifier.index(periodIndex, offsetBy: 1))
+                    self.teamID = applicationIdentifier.substring(to: periodIndex)
+                    self.teamName = team_name
+                    self.name = name
+                    self.entitlements = entitlements as AnyObject?
+
+                    self.isWildcard = appID.firstIndex(of: "*") != nil
                         self.isEnterprise = provisionAllDevices ?? false
                         
                 } else {
