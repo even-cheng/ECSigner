@@ -5,7 +5,7 @@
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/aboutaotosign.png)
 ### resign with local certificate and profile：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/ecsign.png)
-
+####new: auto insert dynamic lib in app
 ```
 1，you can resign multi-file synchronization
 ```

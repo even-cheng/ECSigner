@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14011055246D2E85005BB35D /* optool in Resources */ = {isa = PBXBuildFile; fileRef = 14011054246D2E84005BB35D /* optool */; };
 		1496D35F2384C99900416727 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496D2422384C99900416727 /* JWT.swift */; };
 		1496D3602384C99900416727 /* ECKeyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496D2432384C99900416727 /* ECKeyData.swift */; };
 		1496D3612384C99900416727 /* JWTRequestsAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496D2442384C99900416727 /* JWTRequestsAuthenticator.swift */; };
@@ -401,6 +402,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		14011054246D2E84005BB35D /* optool */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = optool; sourceTree = "<group>"; };
 		1496D2422384C99900416727 /* JWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
 		1496D2432384C99900416727 /* ECKeyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ECKeyData.swift; sourceTree = "<group>"; };
 		1496D2442384C99900416727 /* JWTRequestsAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JWTRequestsAuthenticator.swift; sourceTree = "<group>"; };
@@ -1379,6 +1381,7 @@
 		14D82D53237E970E008D87AC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				14011054246D2E84005BB35D /* optool */,
 				14D82D54237E970E008D87AC /* fix-wwdr.sh */,
 				14D82D55237E970E008D87AC /* Assets.xcassets.zip */,
 				14D82D56237E970E008D87AC /* Contents.json */,
@@ -1539,6 +1542,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14D82D72237E970E008D87AC /* Info.plist in Resources */,
+				14011055246D2E85005BB35D /* optool in Resources */,
 				14D82D6C237E970E008D87AC /* acextract in Resources */,
 				14D82D69237E970E008D87AC /* fix-wwdr.sh in Resources */,
 				14D82D6D237E970E008D87AC /* acegeneral in Resources */,
@@ -1976,7 +1980,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 27242MV879;
@@ -1998,7 +2002,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 27242MV879;

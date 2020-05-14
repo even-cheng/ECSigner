@@ -37,6 +37,8 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     @IBOutlet var outputAssetsButton: NSButton!
     @IBOutlet var ReplaceIconField: NSTextField!
     @IBOutlet var ReplaceIconChooseButton: NSButton!
+    @IBOutlet var dynamicFileField: NSTextField!
+    @IBOutlet var dynamicFileChooseButton: NSButton!
     
     //MARK: Variables
     var provisioningProfiles:[ProvisioningProfile] = []
@@ -69,6 +71,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     let acegeneralPath = Bundle.main.path(forResource: "acegeneral", ofType: nil)!
     let assetsZipPath = Bundle.main.path(forResource: "Assets.xcassets", ofType: "zip")!
     let ContentJsonPath = Bundle.main.path(forResource: "Contents", ofType: "json")!
+    let optoolPath = Bundle.main.path(forResource: "optool", ofType: nil)!
 
     //"/usr/local/bin/acextract"
 
@@ -455,6 +458,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 outputAssetsButton.isEnabled = true
                 ReplaceIconChooseButton.isEnabled = true
                 openSignerViewButton.isEnabled = true
+                dynamicFileChooseButton.isEnabled = true
             } else {
                 // Backup previous values
                 PreviousNewApplicationID = NewApplicationIDTextField.stringValue
@@ -470,6 +474,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 outputAssetsButton.isEnabled = false
                 ReplaceIconChooseButton.isEnabled = false
                 openSignerViewButton.isEnabled = false
+                dynamicFileChooseButton.isEnabled = false
             }
         }
     }
@@ -707,6 +712,38 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         } catch let error as NSError {
             print("channel string write failed: %@",error)
         }
+    }
+    
+    
+    func insertDynamicLibToBundle(bundlePath : NSString) {
+        
+        let dynamicLibPath = self.dynamicFileField.stringValue as NSString
+        let dynamicName = dynamicLibPath.lastPathComponent
+        let appCommandLineName = bundlePath.lastPathComponent.components(separatedBy: ".").first!
+
+        let addPath = bundlePath.appendingPathComponent(dynamicName)
+        var inputIsDirectory: ObjCBool = false
+        let exist = fileManager.fileExists(atPath: addPath, isDirectory: &inputIsDirectory)
+        if !exist {
+            if (try? fileManager.copyItem(atPath: dynamicLibPath as String, toPath: addPath)) == nil {
+                setStatus("Failed Insert Dynamic Lib")
+                return
+            }
+        } else {
+            if (try? fileManager.replaceItemAt(NSURL.fileURL(withPath: addPath), withItemAt: NSURL.fileURL(withPath: dynamicLibPath as String))) == nil {
+                setStatus("Failed Insert Dynamic Lib")
+            }
+            return            
+        }
+        
+        //注入
+        //optoolPath install -c load -p "@executable_path/libcycript.dylib" -t zjqxz
+        let ouputAssetsTask = Process().execute(optoolPath, workingDirectory: nil, arguments: ["install", "-c", "load", "-p", "@executable_path/\(dynamicName)", "-t", "\(bundlePath)/\(appCommandLineName)"])
+        if ouputAssetsTask.status != 0 {
+            setStatus("Failed Insert Dynamic Lib")
+            return
+        }
+        setStatus("Success Insert Dynamic Lib")
     }
     
     @objc func signingThread(_ paths :[String]){
@@ -1000,6 +1037,13 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 DispatchQueue.main.sync(execute: {
                     if channelName.stringValue.count > 0 {
                         self.buildChannelTxtForIPA(bundlePath: appBundlePath as NSString)
+                    }
+                })
+                
+                //动态注入
+                DispatchQueue.main.sync(execute: {
+                    if dynamicFileField.stringValue.count > 0 {
+                        self.insertDynamicLibToBundle(bundlePath: appBundlePath as NSString)
                     }
                 })
                 
@@ -1358,6 +1402,22 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             ReplaceIconField.stringValue = filename.path
         }
     }
+    
+    
+    @IBAction func chooseDynamicFile(_ sender: Any) {
+        
+        let openDialog = NSOpenPanel()
+        openDialog.canChooseFiles = true
+        openDialog.canChooseDirectories = false
+        openDialog.allowsMultipleSelection = false
+        openDialog.allowsOtherFileTypes = false
+        openDialog.allowedFileTypes = ["dylib","framework","a"]
+        openDialog.runModal()
+        if let filename = openDialog.urls.first {
+            dynamicFileField.stringValue = filename.path
+        }
+    }
+
     
     @IBAction func doSign(_ sender: NSButton) {
         switch(true){
