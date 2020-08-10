@@ -1,5 +1,5 @@
 # ECSigner
-***Thank for [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)and[App-Store-Connect](https://github.com/AvdLee/appstoreconnect-swift-sdk)，ECSigner 基于以上开源项目二次开发和汉化，增加一下若干功能：***
+***Thank for [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)and[App-Store-Connect](https://github.com/AvdLee/appstoreconnect-swift-sdk)，ECSigner 基于以上开源项目二次开发，增加若干功能：***
 ### 支持超级签名。自动注册新设备, 自动创建和更新描述文件及签名证书, 自动下载描述和文件签名证书：
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/autosign2.png)
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/aboutaotosign.png)
