@@ -1,4 +1,4 @@
-# ECSigner（手机版已上线，支持实时加锁和后台管理等功能，欢迎加群交流：837459998）
+# ECSigner（iOS签名手机版已上线，支持实时加锁和后台管理等功能，欢迎加群交流：837459998）
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/ecsigner-iOS.png)
 
 ***Thank for [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)and[App-Store-Connect](https://github.com/AvdLee/appstoreconnect-swift-sdk)，ECSigner 基于以上开源项目二次开发，增加若干功能：***
