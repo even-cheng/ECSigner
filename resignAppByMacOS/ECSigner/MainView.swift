@@ -1862,7 +1862,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                             } else if scale == "3x" {
                                 item["filename"] = saveName+"@3x.png"
                             } else if scale == "1x" {
-                                item["filename"] = saveName+"@1x.png"
+                                item["filename"] = saveName+".png"
                             }
                             
                             release[index!] = item
