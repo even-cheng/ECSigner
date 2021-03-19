@@ -1,4 +1,4 @@
-# ECSigner（ iOS签名手机版已上线，支持实时加锁去锁和后台管理等功能，地址：https://github.com/even-cheng/ECSigneriOS ）
+# ECSigner（ iOS签名手机版已开源，地址：https://github.com/even-cheng/ECSigneriOS ）
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/ecsigner-iOS.png)
 ## Mac高级版：
 ![高级版](https://github.com/even-cheng/ECSigner/blob/master/ecsign-vip.jpg)
