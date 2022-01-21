@@ -26,7 +26,7 @@
 7，支持一键替换原包icon。
 ``` 
 
-### 使用方式: （介绍：https://www.jianshu.com/p/3d2dcd8b8e07）
+### 使用方式: （介绍：[ECSigner For Mac](https://www.jianshu.com/p/3d2dcd8b8e07)）
 ```
 1.将下载的 ECSigner.zip解压，并将APP拖入应用程序,双击打开
 2.如果你是新账号，你需要打开钥匙串-证书助理，先请求一个证书并保存本地（CertificateSigningRequest.certSigningRequest）
@@ -36,7 +36,7 @@
 ```
 
 
-## ECSigner For iOS（介绍：https://www.jianshu.com/p/745d01f8166b）， 支持以下功能:
+## ECSigner For iOS（介绍：[ECSigner For iOS](https://www.jianshu.com/p/745d01f8166b)）， 支持以下功能:
 ```
 1，离线证书重签名
 ```
@@ -89,7 +89,7 @@
 17，应用有效时间控制控制模块
 ```
 ```
-### 下载地址：https://github.com/even-cheng/ECSigner/releases
+### 下载地址：releases: iOS v5.0.0
 
 
 
