@@ -3,7 +3,7 @@
 ### 支持本地签名。可以选择本地文件进行签名：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/ecsign.png)
 
-####支持以下操作：
+#### Mac版支持以下操作：
 ```
 1，支持多文件同时签名
 ```
@@ -89,7 +89,7 @@
 17，应用有效时间控制控制模块
 ```
 ```
-### 下载地址：releases: iOS v5.0.0
+#### 下载地址：[ECSigneriOS v5.0.0](https://github.com/even-cheng/ECSigner/releases/tag/5.0)
 
 
 
