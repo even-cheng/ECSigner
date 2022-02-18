@@ -37,6 +37,7 @@
 
 
 ## ECSigner For iOS（介绍：[ECSigner For iOS](https://www.jianshu.com/p/745d01f8166b)）， 支持以下功能:
+国内快速下载地址： https://gitee.com/even_cheng/ecsigner-ios
 ```
 1，离线证书重签名
 ```
