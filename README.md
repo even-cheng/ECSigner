@@ -91,7 +91,6 @@
 ```
 17，应用有效时间控制控制模块
 ```
-#### 下载地址：[ECSigneriOS v5.0.0](https://github.com/even-cheng/ECSigner/releases/tag/5.0)
 
 
 
