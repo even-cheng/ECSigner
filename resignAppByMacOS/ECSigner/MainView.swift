@@ -715,35 +715,59 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     }
     
     
-    func insertDynamicLibToBundle(bundlePath : NSString) {
+    func insertDynamicLibToBundle(bundlePath : NSString, dynamicLibPath: String) -> Bool{
         
-        let dynamicLibPath = self.dynamicFileField.stringValue as NSString
-        let dynamicName = dynamicLibPath.lastPathComponent
-        let appCommandLineName = bundlePath.lastPathComponent.components(separatedBy: ".").first!
+        let frameworkPath: NSString = bundlePath.appendingPathComponent("Frameworks") as NSString
+        let infoPath: NSString = bundlePath.appendingPathComponent("Info.plist") as NSString
+        var inputIsDirectory: ObjCBool = true
+        let exist = fileManager.fileExists(atPath: frameworkPath as String, isDirectory: &inputIsDirectory)
+        if exist == false {
+            do {
+                try fileManager.createDirectory(atPath: frameworkPath as String, withIntermediateDirectories: true, attributes: nil)
+            } catch let error as NSError {
+                setStatus("Error creating Framework directory")
+                Log.write(error.localizedDescription)
+                return false
+            }
+        }
+        //CFBundleExecutable
+        var dynamicName = dynamicLibPath.lastPathComponent
+        if dynamicLibPath.hasSuffix(".framework") {
+            let executable = dynamicName.components(separatedBy: ".").first;
+            dynamicName = dynamicName + "/" + executable!
+        }
 
-        let addPath = bundlePath.appendingPathComponent(dynamicName)
-        var inputIsDirectory: ObjCBool = false
-        let exist = fileManager.fileExists(atPath: addPath, isDirectory: &inputIsDirectory)
-        if !exist {
-            if (try? fileManager.copyItem(atPath: dynamicLibPath as String, toPath: addPath)) == nil {
-                setStatus("Failed Insert Dynamic Lib")
-                return
+        let infoDic = NSDictionary(contentsOfFile: infoPath as String)!
+        let appCommandLineName = infoDic["CFBundleExecutable"]
+
+        var libPath = frameworkPath.appendingPathComponent(dynamicName)
+        if dynamicLibPath.hasSuffix(".framework") {
+            libPath = libPath.stringByDeletingLastPathComponent
+        }
+        
+        inputIsDirectory = false
+        let existLib = fileManager.fileExists(atPath: libPath, isDirectory: &inputIsDirectory)
+        if existLib {
+            
+            if (try? fileManager.removeItem(atPath: libPath)) == nil{
+                setStatus("Failed remove old Dynamic Lib")
             }
-        } else {
-            if (try? fileManager.replaceItemAt(NSURL.fileURL(withPath: addPath), withItemAt: NSURL.fileURL(withPath: dynamicLibPath as String))) == nil {
-                setStatus("Failed Insert Dynamic Lib")
-            }
-            return            
+        }
+        
+        if (try? fileManager.copyItem(atPath: dynamicLibPath as String, toPath: libPath)) == nil {
+            setStatus("Failed Insert Dynamic Lib")
+            return false
         }
         
         //注入
         //optoolPath install -c load -p "@executable_path/libcycript.dylib" -t zjqxz
-        let ouputAssetsTask = Process().execute(optoolPath, workingDirectory: nil, arguments: ["install", "-c", "load", "-p", "@executable_path/\(dynamicName)", "-t", "\(bundlePath)/\(appCommandLineName)"])
+        let ouputAssetsTask = Process().execute(optoolPath, workingDirectory: bundlePath as String, arguments: ["install", "-c", "load", "-p", "@executable_path/Frameworks/\(dynamicName)", "-t", appCommandLineName! as! String])
         if ouputAssetsTask.status != 0 {
             setStatus("Failed Insert Dynamic Lib")
-            return
+            return false
         }
         setStatus("Success Insert Dynamic Lib")
+        return true
     }
     
     @objc func signingThread(_ paths :[String]){
@@ -1043,7 +1067,8 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 //动态注入
                 DispatchQueue.main.sync(execute: {
                     if dynamicFileField.stringValue.count > 0 {
-                        self.insertDynamicLibToBundle(bundlePath: appBundlePath as NSString)
+                        let dynamicLibPath = self.dynamicFileField.stringValue as NSString
+                        self.insertDynamicLibToBundle(bundlePath: appBundlePath as NSString, dynamicLibPath:dynamicLibPath as String)
                     }
                 })
                 
