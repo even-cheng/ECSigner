@@ -5,6 +5,10 @@
 ### 支持本地签名。可以选择本地文件进行签名：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/ecsign.png)
 
+
+#### iOS版
+![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/IMG_93421BB1B785-1.jpeg)
+
 #### Mac版支持以下操作：
 ```
 1，支持多文件同时签名
