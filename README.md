@@ -7,7 +7,7 @@
 
 
 #### iOS版
-![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/IMG_93421BB1B785-1.jpeg)
+![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/foriOS.JPG)
 
 #### Mac版支持以下操作：
 ```
