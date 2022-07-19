@@ -3,7 +3,8 @@
 本项目为iOS重签名软件(Mac版源码及iOS版)，本项目仅用作开发自测使用，请勿用作非法用途。
 ***Thank for [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)and[App-Store-Connect](https://github.com/AvdLee/appstoreconnect-swift-sdk)，ECSigner 基于以上开源项目二次开发，增加若干功能：***
 ### 支持本地签名。可以选择本地文件进行签名：
-![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/ecsign.png)
+![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign-1.png)
+![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign-2.png)
 
 
 #### iOS版
