@@ -1,12 +1,12 @@
 ## !!! 限时开放iOS版高级会员权限免费使用 >>> [前往下载](https://github.com/even-cheng/ECSigner/releases/tag/5.2.0)
 
+## 手机版/Mac高级版 隐身注入功能已支持！
+
 本项目为iOS重签名软件(Mac版源码及iOS版)，本项目仅用作开发自测使用，请勿用作非法用途。
 ***Thank for [ios-app-signer](https://github.com/DanTheMan827/ios-app-signer)and[App-Store-Connect](https://github.com/AvdLee/appstoreconnect-swift-sdk)，ECSigner 基于以上开源项目二次开发，增加若干功能：***
 ### 支持本地签名。可以选择本地文件进行签名：
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign-1.png)
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign-2.png)
-
-## 手机版/Mac高级版 隐身注入功能已支持！
 
 #### iOS版
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/foriOS.JPG)
