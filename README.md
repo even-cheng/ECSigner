@@ -6,6 +6,7 @@
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign-1.png)
 ![ sign.png](https://github.com/even-cheng/even-appSigner/blob/master/sign-2.png)
 
+## 手机版/Mac高级版 隐身注入功能已支持！
 
 #### iOS版
 ![ sign.png](https://github.com/even-cheng/ECSigner/blob/master/foriOS.JPG)
